@@ -10,6 +10,7 @@ import com.raktim.fiverclone.user.model.UserEntity;
 import com.raktim.fiverclone.user.utils.UserMapper;
 import com.raktim.fiverclone.utils.ExceptionTestUtil;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mapstruct.factory.Mappers;
@@ -170,5 +171,33 @@ public class UserServiceImplTest {
 
         UserListResponseDto firstUser = result.items().getFirst();
         assertInstanceOf(UserListResponseDto.class, firstUser);
+    }
+
+    @Test
+    @DisplayName("When called findUserByIdOrThrow, And repo returns empty, Then it should throw exception")
+    public void testFindByIdOrThrow() {
+        UUID id = UUID.randomUUID();
+        when(userRepo.findById(id)).thenReturn(Optional.empty());
+        ExceptionTestUtil.assertBusinessException(
+                HttpStatus.NOT_FOUND,
+                "USER_NOT_FOUND",
+                "User with id " + id + " not found",
+                () -> userService.findUserByIdOrThrow(id)
+        );
+
+        verify(userRepo).findById(id);
+    }
+
+    @Test
+    @DisplayName("When called findUserByIdOrThrow, And repo returns valid entity, Then it should return entity")
+    public void testFindByIdOrThrow_validEntity() {
+        UUID id = UUID.randomUUID();
+        UserEntity userEntity = UserTestDataFactory.validUserEntity().build();
+        userEntity.setId(id);
+        when(userRepo.findById(id)).thenReturn(Optional.of(userEntity));
+        UserEntity result = userService.findUserByIdOrThrow(id);
+        assertNotNull(result);
+        assertInstanceOf(UserEntity.class, result);
+        assertEquals(id, result.getId());
     }
 }

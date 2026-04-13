@@ -4,6 +4,7 @@ import java.util.UUID;
 
 public record SkillDto(
         UUID id,
-        Skill Skills
+        Skill skill
+
 ) {
 }

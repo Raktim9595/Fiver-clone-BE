@@ -14,7 +14,8 @@ import java.util.Set;
 
 @EqualsAndHashCode(callSuper = true)
 @Entity
-@Data
+@Getter
+@Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor

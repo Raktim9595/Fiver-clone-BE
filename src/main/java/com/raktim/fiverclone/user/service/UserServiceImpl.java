@@ -9,6 +9,7 @@ import com.raktim.fiverclone.user.DTO.UserResponseDTO;
 import com.raktim.fiverclone.user.UserRepo;
 import com.raktim.fiverclone.user.model.UserEntity;
 import com.raktim.fiverclone.user.utils.UserMapper;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.jspecify.annotations.NonNull;
 import org.slf4j.Logger;
@@ -56,7 +57,8 @@ public class UserServiceImpl implements UserService {
         return PaginationUtil.build(paginatedUsers, userMapper::toListResponseDTO);
     }
 
-    private @NonNull UserEntity findUserByIdOrThrow(UUID id) {
+    @Override
+    public @NotNull UserEntity findUserByIdOrThrow(UUID id) {
         log.info("Finding user by id {}", id);
         UserEntity userEntity = userRepo.findById(id).orElse(null);
         if (userEntity == null) {
