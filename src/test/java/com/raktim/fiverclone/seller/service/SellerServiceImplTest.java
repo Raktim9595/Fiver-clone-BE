@@ -11,6 +11,8 @@ import com.raktim.fiverclone.seller.model.SellerEntity;
 import com.raktim.fiverclone.seller.repo.SellerRepo;
 import com.raktim.fiverclone.user.DTO.UserListResponseDto;
 import com.raktim.fiverclone.user.model.UserEntity;
+import com.raktim.fiverclone.user.model.UserRole;
+import com.raktim.fiverclone.user.service.UserService;
 import com.raktim.fiverclone.user.utils.UserMapper;
 import com.raktim.fiverclone.user.utils.UserMapperImpl;
 import jakarta.persistence.EntityManager;
@@ -18,6 +20,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
@@ -26,9 +29,9 @@ import java.math.BigDecimal;
 import java.util.Set;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.assertInstanceOf;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -39,6 +42,9 @@ public class SellerServiceImplTest {
     @Mock
     private EntityManager entityManager;
 
+    @Mock
+    private UserService userService;
+
     private SellerServiceImpl sellerService;
 
     @BeforeEach
@@ -47,7 +53,7 @@ public class SellerServiceImplTest {
         SellerMapper sellerMapper = new SellerMapperImpl();
 
         ReflectionTestUtils.setField(sellerMapper, "userMapper", userMapper);
-        sellerService = new SellerServiceImpl(sellerRepo, entityManager, sellerMapper);
+        sellerService = new SellerServiceImpl(sellerRepo, entityManager, sellerMapper, userService);
     }
 
     @Test
@@ -67,8 +73,10 @@ public class SellerServiceImplTest {
                 .skills(Set.of(skillId1, skillId2))
                 .build();
 
-        UserEntity userRef = new UserEntity();
-        userRef.setId(userId);
+        UserEntity user = UserTestDataFactory.validUserEntity()
+                .role(UserRole.ADMIN)
+                .build();
+        user.setId(userId);
 
         ExperienceLevelEntity experienceRef = new ExperienceLevelEntity();
         experienceRef.setId(experienceId);
@@ -81,7 +89,7 @@ public class SellerServiceImplTest {
 
         // building the entity
         SellerEntity savedEntity = SellerEntity.builder()
-                .baseUser(userRef)
+                .baseUser(user)
                 .experience(experienceRef)
                 .skills(Set.of(skill1, skill2))
                 .description("Java backend developer")
@@ -91,10 +99,7 @@ public class SellerServiceImplTest {
 
         savedEntity.setId(id);
 
-        // mocking the returns of the dependencies
-        when(entityManager.getReference(UserEntity.class, userId)).thenReturn(
-                UserTestDataFactory.validUserEntity().build()
-        );
+        when(userService.findUserByIdOrThrow(userId)).thenReturn(user);
         when(entityManager.getReference(ExperienceLevelEntity.class, experienceId)).thenReturn(experienceRef);
         when(entityManager.getReference(SkillEntity.class, skillId1)).thenReturn(skill1);
         when(entityManager.getReference(SkillEntity.class, skillId2)).thenReturn(skill2);
@@ -107,6 +112,13 @@ public class SellerServiceImplTest {
         assertInstanceOf(UserListResponseDto.class, response.baseUser());
         assertInstanceOf(SkillDto.class, response.skills().getFirst());
         assertInstanceOf(ExperienceLevelDto.class, response.experience());
+
+        ArgumentCaptor<SellerEntity> captor = ArgumentCaptor.forClass(SellerEntity.class);
+        verify(sellerRepo).save(captor.capture());
+
+        SellerEntity savedSeller = captor.getValue();
+        assertInstanceOf(UserEntity.class, savedSeller.getBaseUser());
+        assertEquals(UserRole.SELLER, savedSeller.getBaseUser().getRole());
     }
 
 }
