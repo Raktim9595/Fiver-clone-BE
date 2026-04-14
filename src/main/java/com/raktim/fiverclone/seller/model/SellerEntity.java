@@ -35,7 +35,7 @@ public class SellerEntity extends BaseEntity {
     private ExperienceLevelEntity experience;
 
     // What sort of skills does the user have
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "seller_skills",
             joinColumns = @JoinColumn(name = "seller_id"),
