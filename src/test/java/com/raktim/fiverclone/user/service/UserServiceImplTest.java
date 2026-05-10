@@ -200,4 +200,34 @@ public class UserServiceImplTest {
         assertInstanceOf(UserEntity.class, result);
         assertEquals(id, result.getId());
     }
+
+    @Test
+    @DisplayName("When called findByUsernameOrThrow, And repo return null, Than it should throw exception")
+    public void testFindByUsernameOrThrow_Error() {
+        String username = "Raktim";
+        when(userRepo.findByUsername(username)).thenReturn(null);
+        ExceptionTestUtil.assertBusinessException(
+                HttpStatus.NOT_FOUND,
+                "USER_NOT_FOUND",
+                "User with username " + username + " not found",
+                () -> userService.findByUsernameOrThrow(username)
+        );
+
+        verify(userRepo).findByUsername(username);
+    }
+
+    @Test
+    @DisplayName("When called findByUsernameOrThrow, And repo returns valid entity, Than it should return proper dto")
+    public void testFindByUsernameOrThrow_validEntity() {
+        String username = "Raktim";
+        UserEntity userEntity = UserTestDataFactory.validUserEntity().build();
+        userEntity.setId(UUID.randomUUID());
+        when(userRepo.findByUsername(username)).thenReturn(userEntity);
+        var result = userService.findByUsernameOrThrow(username);
+        assertNotNull(result);
+        assertInstanceOf(UserResponseDTO.class, result);
+        assertEquals(username, result.username());
+        verify(userRepo).findByUsername(username);
+    }
+
 }

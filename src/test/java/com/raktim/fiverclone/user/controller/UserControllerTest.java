@@ -4,25 +4,33 @@ import com.raktim.fiverclone.common.DTO.SearchRequestDto;
 import com.raktim.fiverclone.common.utils.JWTUtil;
 import com.raktim.fiverclone.mocks.UserTestDataFactory;
 import com.raktim.fiverclone.user.DTO.UserDTO;
+import com.raktim.fiverclone.user.DTO.UserResponseDTO;
 import com.raktim.fiverclone.user.service.CustomUserDetailService;
 import com.raktim.fiverclone.user.service.UserService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import tools.jackson.databind.ObjectMapper;
 
+import java.util.List;
 import java.util.UUID;
 
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import org.springframework.security.test.context.support.WithMockUser;
 
 @WebMvcTest(UserController.class)
+@AutoConfigureMockMvc(addFilters = false)
 public class UserControllerTest {
     @Autowired
     private MockMvc mockMvc;
@@ -74,5 +82,37 @@ public class UserControllerTest {
                 .andExpect(status().isOk());
 
         verify(userService).findAllUsers(0, 10);
+    }
+
+    @Test
+    @WithMockUser(username = "Raktim")
+    @DisplayName("When called endpoint user/me then it should find currently logged in user")
+    void shouldFindCurrentlyLoggedInUser() throws Exception {
+
+        UUID userId = UUID.randomUUID();
+
+        UserResponseDTO response =
+                UserTestDataFactory.validUserResponseDTO()
+                        .id(userId)
+                        .build();
+
+        Mockito.when(userService.findByUsernameOrThrow("Raktim"))
+                .thenReturn(response);
+
+        Authentication authentication =
+                new UsernamePasswordAuthenticationToken(
+                        "Raktim",
+                        null,
+                        List.of()
+                );
+
+        mockMvc.perform(
+                        get("/api/user/me")
+                                .principal(authentication)
+                )
+                .andExpect(status().isOk());
+
+        Mockito.verify(userService)
+                .findByUsernameOrThrow("Raktim");
     }
 }

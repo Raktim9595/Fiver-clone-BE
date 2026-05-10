@@ -8,16 +8,18 @@ import com.raktim.fiverclone.user.DTO.UserResponseDTO;
 import com.raktim.fiverclone.user.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
-import io.swagger.v3.oas.annotations.security.SecurityRequirements;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
+@Slf4j
 @RestController
 @RequestMapping("api")
 @AllArgsConstructor
@@ -26,7 +28,7 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("user")
-    @Operation(summary = "Create User", description = "Create a single User")
+    @Operation(summary =  "Create User", description = "Create a single User")
     @SecurityRequirement(name = "bearerAuth")
     public ResponseEntity<UserResponseDTO> createUser(
             @Valid @RequestBody UserDTO userDTO
@@ -57,5 +59,15 @@ public class UserController {
                 dto.pageSize()
         );
         return ResponseEntity.ok(users);
+    }
+
+    @GetMapping("user/me")
+    @Operation(summary = "Get current logged in user", description = "Get the details of the user from auth token")
+    @SecurityRequirement(name = "bearerAuth")
+    public ResponseEntity<UserResponseDTO> getMe(
+            Authentication authentication
+            ) {
+        UserResponseDTO result = userService.findByUsernameOrThrow(authentication.getName());
+        return ResponseEntity.ok(result);
     }
 }
