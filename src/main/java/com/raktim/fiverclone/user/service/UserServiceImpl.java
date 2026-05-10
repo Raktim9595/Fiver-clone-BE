@@ -11,7 +11,6 @@ import com.raktim.fiverclone.user.model.UserEntity;
 import com.raktim.fiverclone.user.utils.UserMapper;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
-import org.jspecify.annotations.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -56,6 +55,22 @@ public class UserServiceImpl implements UserService {
         Page<UserEntity> paginatedUsers = userRepo.findAll(PageRequest.of(pageNumber, pageSize));
         return PaginationUtil.build(paginatedUsers, userMapper::toListResponseDTO);
     }
+
+    @Override
+    public UserResponseDTO findByUsernameOrThrow(String username) {
+        log.info("Finding user by username {}", username);
+        UserEntity userEntity = userRepo.findByUsername(username);
+
+        if  (userEntity == null) {
+            throw new BusinessException(
+                    HttpStatus.NOT_FOUND,
+                    "USER_NOT_FOUND",
+                    "User with username " + username + " not found"
+            );
+        }
+
+        return userMapper.toDetailResponseDTO(userEntity);
+    };
 
     @Override
     public @NotNull UserEntity findUserByIdOrThrow(UUID id) {

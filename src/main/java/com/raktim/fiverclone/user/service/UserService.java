@@ -13,4 +13,5 @@ public interface UserService {
     UserResponseDTO findUserById(UUID id);
     PaginatedResponseDto<UserListResponseDto> findAllUsers(Integer pageNumber, Integer pageSize);
     UserEntity findUserByIdOrThrow(UUID id);
+    UserResponseDTO findByUsernameOrThrow(String username);
 }
