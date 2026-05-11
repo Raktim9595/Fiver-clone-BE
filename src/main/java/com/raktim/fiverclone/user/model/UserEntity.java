@@ -1,9 +1,13 @@
 package com.raktim.fiverclone.user.model;
 
 import com.raktim.fiverclone.common.entities.BaseEntity;
+import com.raktim.fiverclone.fileUpload.model.UserFileEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import lombok.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @EqualsAndHashCode(callSuper = true)
 @Entity
@@ -36,4 +40,7 @@ public class UserEntity extends BaseEntity {
             columnDefinition = "varchar(20) check (role in ('BUYER','ADMIN', 'SELLER'))"
     )
     private UserRole role = UserRole.BUYER;
+
+    @OneToMany(mappedBy = "user")
+    private List<UserFileEntity> files = new ArrayList<>();
 }
