@@ -2,7 +2,6 @@ package com.raktim.fiverclone.common.utils;
 
 import com.raktim.fiverclone.common.exceptions.BusinessException;
 import com.raktim.fiverclone.user.model.UserPrincipal;
-import com.raktim.fiverclone.user.model.UserRole;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SecurityException;
