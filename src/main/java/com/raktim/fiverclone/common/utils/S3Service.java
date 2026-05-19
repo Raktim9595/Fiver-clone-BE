@@ -10,6 +10,7 @@ import software.amazon.awssdk.services.s3.presigner.S3Presigner;
 import software.amazon.awssdk.services.s3.presigner.model.PutObjectPresignRequest;
 
 import java.time.Duration;
+import java.time.Instant;
 
 @Service
 @RequiredArgsConstructor
@@ -19,8 +20,10 @@ public class S3Service {
     @Value("${aws.s3.bucket}")
     private String bucket;
 
-    public String generateUploadUrl(String key, String contentType) {
+    public GenerateUploadUrlResult generateUploadUrl(String key, String contentType) {
     try {
+        Duration duration = Duration.ofMinutes(10);
+
         PutObjectRequest putObjectRequest =
                 PutObjectRequest.builder()
                         .bucket(bucket)
@@ -30,14 +33,23 @@ public class S3Service {
 
         PutObjectPresignRequest presignRequest =
                 PutObjectPresignRequest.builder()
-                        .signatureDuration(Duration.ofMinutes(10))
+                        .signatureDuration(duration)
                         .putObjectRequest(putObjectRequest)
                         .build();
 
-        return s3Presigner.presignPutObject(presignRequest)
+        String uploadUrl = s3Presigner.presignPutObject(presignRequest)
                 .url()
                 .toString();
+
+        return new GenerateUploadUrlResult(
+                uploadUrl,
+                Instant.now().plus(duration)
+        );
     } catch (RuntimeException ex) {
-        throw new BusinessException(HttpStatus.INTERNAL_SERVER_ERROR, "UNABLE_TO_GENERATE_UPLOAD_URL", ex.getMessage());
+        throw new BusinessException(
+                HttpStatus.INTERNAL_SERVER_ERROR,
+                "UNABLE_TO_GENERATE_UPLOAD_URL",
+                ex.getMessage()
+        );
     }}
 }

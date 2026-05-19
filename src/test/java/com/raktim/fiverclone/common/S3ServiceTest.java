@@ -1,5 +1,6 @@
 package com.raktim.fiverclone.common;
 
+import com.raktim.fiverclone.common.utils.GenerateUploadUrlResult;
 import com.raktim.fiverclone.common.utils.S3Service;
 import com.raktim.fiverclone.utils.ExceptionTestUtil;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,6 +14,7 @@ import software.amazon.awssdk.services.s3.presigner.model.PutObjectPresignReques
 
 import java.net.URI;
 import java.net.URL;
+import java.time.Instant;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -36,9 +38,13 @@ class S3ServiceTest {
     }
 
     @Test
-    @DisplayName("Given generateUploadUrl, When called And it does not throw any error Then it should return proper" +
-            "signed url")
+    @DisplayName("""
+        Given generateUploadUrl,
+        When called and no exception occurs,
+        Then it should return signed url with expiration instant
+        """)
     void generateUploadUrl_valid() throws Exception {
+
         PresignedPutObjectRequest presignedRequest =
                 mock(PresignedPutObjectRequest.class);
 
@@ -46,27 +52,35 @@ class S3ServiceTest {
                 .create("https://test-bucket.s3.amazonaws.com/test-file.png")
                 .toURL();
 
+
         when(presignedRequest.url()).thenReturn(url);
+
         when(s3Presigner.presignPutObject(any(PutObjectPresignRequest.class)))
                 .thenReturn(presignedRequest);
 
-        String result = s3Service.generateUploadUrl(
+        GenerateUploadUrlResult result = s3Service.generateUploadUrl(
                 "uploads/test-file.png",
                 "image/png"
         );
 
         assertEquals(
                 "https://test-bucket.s3.amazonaws.com/test-file.png",
-                result
+                result.uploadUrl()
         );
+
+        assertInstanceOf(Instant.class, result.expiresAt());
 
         verify(s3Presigner, times(1))
                 .presignPutObject(any(PutObjectPresignRequest.class));
     }
 
+
     @Test
-    @DisplayName("Given generateUploadUrl, When called And it throw exception, Then it should throw proper" +
-            "error messages")
+    @DisplayName("""
+            Given generateUploadUrl,
+            When called And it throw exception, Then it should throw proper"
+            "error messages
+            """)
     void generateUploadUrl_exception() throws Exception {
         when(s3Presigner.presignPutObject(any(PutObjectPresignRequest.class)))
                 .thenThrow(new RuntimeException("AWS error"));
