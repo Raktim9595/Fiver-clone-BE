@@ -63,7 +63,7 @@ public class GlobalExceptionHandler {
             HttpServletRequest request
     ) {
         LocalDateTime timestamp = getCurrentTime();
-        logger.error("MethodArgumentNotValidException, {}, {} ", timestamp, ex.getMessage());
+        logger.error("Error in business logic, {}, {} ", timestamp, ex.getMessage());
 
         ErrorResponseDTO errorResponse = new ErrorResponseDTO(
                 timestamp,
