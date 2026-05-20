@@ -15,6 +15,7 @@ import lombok.*;
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class UserFileEntity extends BaseEntity {
+    @Column(nullable = false, unique = true)
     private String s3Key;
     private String originalFileName;
     private String contentType;

@@ -7,5 +7,5 @@ import org.springframework.stereotype.Repository;
 import java.util.UUID;
 
 @Repository
-public interface fileUploadRepo extends JpaRepository<UserFileEntity, UUID> {
+public interface FileUploadRepo extends JpaRepository<UserFileEntity, UUID> {
 }
