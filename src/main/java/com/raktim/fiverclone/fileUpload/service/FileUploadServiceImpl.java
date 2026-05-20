@@ -46,6 +46,7 @@ public class FileUploadServiceImpl implements FileUploadService {
                  user
          );
 
+         log.info("Uploading file url for the file upload {} and file key {}", fileUploadDto, key);
          UserFileEntity savedFile = fileUploadRepo.save(newEntity);
          GenerateUploadUrlResult uploadUrlResult = s3Service.generateUploadUrl(key, fileUploadDto.contentType());
 

@@ -24,18 +24,10 @@ public class S3Service {
     try {
         Duration duration = Duration.ofMinutes(10);
 
-        PutObjectRequest putObjectRequest =
-                PutObjectRequest.builder()
-                        .bucket(bucket)
-                        .key(key)
-                        .contentType(contentType)
-                        .build();
+        PutObjectRequest putObjectRequest = getPutObjectRequest(key, contentType);
 
         PutObjectPresignRequest presignRequest =
-                PutObjectPresignRequest.builder()
-                        .signatureDuration(duration)
-                        .putObjectRequest(putObjectRequest)
-                        .build();
+                getPutObjectPresignRequest(putObjectRequest, duration);
 
         String uploadUrl = s3Presigner.presignPutObject(presignRequest)
                 .url()
@@ -52,4 +44,22 @@ public class S3Service {
                 ex.getMessage()
         );
     }}
+
+    private PutObjectRequest getPutObjectRequest(String key, String contentType) {
+        return  PutObjectRequest.builder()
+                .bucket(bucket)
+                .key(key)
+                .contentType(contentType)
+                .build();
+    }
+
+    private PutObjectPresignRequest getPutObjectPresignRequest(
+            PutObjectRequest putObjectRequest,
+            Duration duration
+    ) {
+        return PutObjectPresignRequest.builder()
+                .signatureDuration(duration)
+                .putObjectRequest(putObjectRequest)
+                .build();
+    }
 }

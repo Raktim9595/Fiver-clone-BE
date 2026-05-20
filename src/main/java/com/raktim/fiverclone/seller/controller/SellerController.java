@@ -6,6 +6,7 @@ import com.raktim.fiverclone.seller.service.SellerService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +25,9 @@ public class SellerController {
     @PostMapping("/seller")
     @SecurityRequirement(name = "bearerAuth")
     @Operation(summary = "Create a new seller", description = "Endpoint to add a new seller from a existing user")
-    public ResponseEntity<SellerResponseDto> addSeller(@RequestBody SellerDto sellerDto) {
+    public ResponseEntity<SellerResponseDto> addSeller(
+            @Valid @RequestBody SellerDto sellerDto
+    ) {
         SellerResponseDto result = sellerService.addSeller(sellerDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(result);
     }
