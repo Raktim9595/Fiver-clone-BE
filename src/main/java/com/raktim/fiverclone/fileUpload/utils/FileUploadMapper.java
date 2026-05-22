@@ -1,5 +1,6 @@
 package com.raktim.fiverclone.fileUpload.utils;
 
+import com.raktim.fiverclone.fileUpload.dto.CompleteFileUploadResponseDto;
 import com.raktim.fiverclone.fileUpload.dto.FileUploadDto;
 import com.raktim.fiverclone.fileUpload.dto.GetUploadUrlResponseDto;
 import com.raktim.fiverclone.fileUpload.model.UserFileEntity;
@@ -29,4 +30,6 @@ public interface FileUploadMapper {
             String uploadUrl,
             Instant expiresAt
     );
+
+    CompleteFileUploadResponseDto toCompleteFileUploadResponseDto(UserFileEntity userFile);
 }

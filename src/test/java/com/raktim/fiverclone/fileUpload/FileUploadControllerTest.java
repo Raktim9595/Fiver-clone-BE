@@ -17,10 +17,8 @@ import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.UUID;
-
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(FileUploadController.class)
@@ -44,7 +42,7 @@ public class FileUploadControllerTest {
 
     @Test
     @DisplayName("""
-            Given endpoint "/api/file-upload/user-profile",
+            Given endpoint "/api/files/upload-url",
             When called, Then it should generate new signUrl to upload user-profile image
             """)
     public void getUploadUrl() throws Exception {
@@ -55,7 +53,7 @@ public class FileUploadControllerTest {
                 .build();
 
         mockMvc.perform(
-                post("/api/file-upload/user-profile")
+                post("/api/files/upload-url")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(fileUploadDto)))
                 .andExpect(status().isOk());

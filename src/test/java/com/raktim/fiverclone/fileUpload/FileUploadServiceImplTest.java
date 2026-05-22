@@ -3,6 +3,7 @@ package com.raktim.fiverclone.fileUpload;
 import com.raktim.fiverclone.common.exceptions.BusinessException;
 import com.raktim.fiverclone.common.utils.GenerateUploadUrlResult;
 import com.raktim.fiverclone.common.utils.S3Service;
+import com.raktim.fiverclone.fileUpload.dto.CompleteFileUploadResponseDto;
 import com.raktim.fiverclone.fileUpload.dto.FileUploadDto;
 import com.raktim.fiverclone.fileUpload.dto.GetUploadUrlResponseDto;
 import com.raktim.fiverclone.fileUpload.model.UserFileEntity;
@@ -28,6 +29,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 import java.time.Instant;
+import java.util.Optional;
 import java.util.UUID;
 
 @ExtendWith(MockitoExtension.class)
@@ -227,6 +229,107 @@ public class FileUploadServiceImplTest {
                 () -> verify(userService, times(1)).findUserByIdOrThrow(userId),
                 () -> verify(fileUploadRepo, times(1)).save(any(UserFileEntity.class)),
                 () -> verify(s3Service, times(1)).generateUploadUrl(any(), any())
+        );
+    }
+
+    @Test
+    @DisplayName("""
+            Given completeFileUpload, When called,
+            And the method throws file not found error,
+            than it should throw proper exception
+            """)
+    public void completeFileUpload_file_not_found_exception() {
+        UUID userId = UUID.randomUUID();
+        UUID fileId = UUID.randomUUID();
+
+       when(fileUploadRepo.findByIdAndUserId(fileId, userId)).thenThrow(
+               new BusinessException(
+                       HttpStatus.NOT_FOUND,
+                       "USER_FILE_NOT_FOUND",
+                       "File %s for user %s not found".formatted(fileId, userId)
+               )
+       );
+
+       ExceptionTestUtil.assertBusinessException(
+               HttpStatus.NOT_FOUND,
+               "USER_FILE_NOT_FOUND",
+               "File %s for user %s not found".formatted(fileId, userId),
+               () -> fileUploadService.completeFileUpload(
+                       fileId,
+                       userId,
+                       FileStatus.UPLOADED
+               )
+       );
+
+       verify(fileUploadRepo, times(1)).findByIdAndUserId(fileId, userId);
+       verify(fileUploadRepo, never()).save(any(UserFileEntity.class));
+    }
+
+    @Test
+    @DisplayName("""
+            Given completeFileUpload, When called,
+            And the found file has a status of UPLOADED,
+            than it should throw INVALID_FILE_STATUS exception
+            """)
+    public void completeFileUpload_invalid_file_status_exception() {
+        UUID userId = UUID.randomUUID();
+        UUID fileId = UUID.randomUUID();
+
+        UserFileEntity foundFile = FileUploadTestData.validUserFileEntity()
+                .status(FileStatus.UPLOADED)
+                .build();
+        foundFile.setId(fileId);
+
+        when(fileUploadRepo.findByIdAndUserId(fileId, userId)).thenReturn(Optional.of(foundFile));
+
+        ExceptionTestUtil.assertBusinessException(
+                HttpStatus.BAD_REQUEST,
+                "INVALID_FILE_STATUS",
+                "Only file with status UPLOADING can be updated",
+                () -> fileUploadService.completeFileUpload(
+                        fileId,
+                        userId,
+                        FileStatus.UPLOADED
+                )
+        );
+
+        verify(fileUploadRepo, times(1)).findByIdAndUserId(fileId, userId);
+        verify(fileUploadRepo, never()).save(any(UserFileEntity.class));
+    }
+
+    @Test
+    @DisplayName("""
+            Given completeFileUpload, When called,
+            And the file upload has been completed,
+            than it should return proper response
+            """)
+    public void completeFileUpload_success() {
+        UUID userId = UUID.randomUUID();
+        UUID fileId = UUID.randomUUID();
+
+        UserFileEntity foundFile = FileUploadTestData.validUserFileEntity()
+                .build();
+        foundFile.setId(fileId);
+
+        UserFileEntity savedFile = FileUploadTestData.validUserFileEntity()
+                .status(FileStatus.UPLOADED)
+                .build();
+        savedFile.setId(fileId);
+
+        when(fileUploadRepo.findByIdAndUserId(fileId, userId)).thenReturn(Optional.of(foundFile));
+        when(fileUploadRepo.save(any(UserFileEntity.class))).thenReturn(savedFile);
+        CompleteFileUploadResponseDto result = fileUploadService.completeFileUpload(
+                fileId,
+                userId,
+                FileStatus.UPLOADED
+        );
+
+        verify(fileUploadRepo, times(1)).findByIdAndUserId(fileId, userId);
+        verify(fileUploadRepo, times(1)).save(any(UserFileEntity.class));
+        assertAll(
+                () -> assertInstanceOf(CompleteFileUploadResponseDto.class, result),
+                () -> assertEquals(result.id(), fileId),
+                () -> assertEquals(FileStatus.UPLOADED, result.status())
         );
     }
 }

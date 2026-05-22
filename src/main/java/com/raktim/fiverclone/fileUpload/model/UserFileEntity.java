@@ -32,7 +32,7 @@ public class UserFileEntity extends BaseEntity {
     @Enumerated(EnumType.STRING)
     @Column(
             nullable = false,
-            columnDefinition = "varchar(20) check (status in ('UPLOADING', 'UPLOADED', 'DELETED'))"
+            columnDefinition = "varchar(20) check (status in ('UPLOADING', 'UPLOADED', 'DELETED', 'FAILED'))"
     )
     private FileStatus status = FileStatus.UPLOADING;
 

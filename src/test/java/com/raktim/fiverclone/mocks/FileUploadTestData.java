@@ -1,5 +1,6 @@
 package com.raktim.fiverclone.mocks;
 
+import com.raktim.fiverclone.fileUpload.dto.CompleteFileUploadResponseDto;
 import com.raktim.fiverclone.fileUpload.dto.FileUploadDto;
 import com.raktim.fiverclone.fileUpload.dto.GetUploadUrlResponseDto;
 import com.raktim.fiverclone.fileUpload.model.UserFileEntity;
@@ -7,6 +8,7 @@ import com.raktim.fiverclone.fileUpload.utils.FileStatus;
 import com.raktim.fiverclone.fileUpload.utils.FileType;
 
 import java.time.Instant;
+import java.util.UUID;
 
 public class FileUploadTestData {
     public static FileUploadDto.FileUploadDtoBuilder validFileUploadDto() {
@@ -35,6 +37,14 @@ public class FileUploadTestData {
                 .status(FileStatus.UPLOADING)
                 .s3Key("s3Key")
                 .expiresAt(Instant.now());
+    }
+
+    public static CompleteFileUploadResponseDto.CompleteFileUploadResponseDtoBuilder
+    validCompleteFileUploadResponseDto() {
+        return CompleteFileUploadResponseDto
+                .builder()
+                .id(UUID.randomUUID())
+                .status(FileStatus.UPLOADED);
     }
 
 }

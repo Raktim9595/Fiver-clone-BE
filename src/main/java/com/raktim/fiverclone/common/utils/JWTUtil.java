@@ -40,6 +40,7 @@ public class JWTUtil {
                 .signWith(key)
                 .claim("email", user.getEmail())
                 .claim("role", user.getUserRole())
+                .claim("id", user.getId())
                 .compact();
     }
 
