@@ -9,6 +9,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.UUID;
 
 @RequiredArgsConstructor
 @NullMarked
@@ -56,5 +57,9 @@ public class UserPrincipal implements UserDetails {
 
     public UserRole getUserRole() {
         return user.getRole();
+    }
+
+    public @NullMarked UUID getId() {
+        return user.getId();
     }
 }
