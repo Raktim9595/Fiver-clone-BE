@@ -1,8 +1,14 @@
 package com.raktim.fiverclone.user.DTO;
 
 import com.raktim.fiverclone.user.model.UserRole;
+import com.raktim.fiverclone.user.model.UserStatus;
+import jakarta.persistence.Column;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.*;
 import lombok.Builder;
+
+import java.time.LocalDate;
 
 @Builder(toBuilder = true)
 public record UserDTO(
@@ -22,9 +28,6 @@ public record UserDTO(
         @Email(message = "Invalid email format")
         String email,
 
-        @Min(value = 15, message = "User age must be at least 15")
-        int age,
-
         @NotBlank(message = "Address is required")
         String address,
 
@@ -33,5 +36,15 @@ public record UserDTO(
         String phoneNumber,
 
         @NotNull(message = "Role is required")
-        UserRole role
+        UserRole role,
+
+        String bio,
+        String timeZone,
+        String country,
+        String language,
+
+        @NotNull(message = "Date of Birth is required")
+        LocalDate dateOfBirth,
+
+        UserStatus status
 ) {}

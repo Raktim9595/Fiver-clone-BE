@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,11 +29,20 @@ public class UserEntity extends BaseEntity {
     @Column(unique = true, nullable = false)
     private String email;
 
-    @Min(0)
-    private int age;
-
     private String address;
     private String phoneNumber;
+    private String bio;
+    private String timeZone;
+    private String country;
+    private String language;
+    private LocalDate dateOfBirth;
+
+    @Enumerated(EnumType.STRING)
+    @Column(
+            nullable = false,
+            columnDefinition = "varchar(20) check (status in ('ACTIVE', 'DISABLED', 'DELETED'))"
+    )
+    private UserStatus status =  UserStatus.ACTIVE;
 
     @Enumerated(EnumType.STRING)
     @Column(
