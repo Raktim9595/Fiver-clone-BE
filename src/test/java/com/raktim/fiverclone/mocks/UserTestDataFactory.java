@@ -4,8 +4,10 @@ import com.raktim.fiverclone.user.DTO.UserDTO;
 import com.raktim.fiverclone.user.DTO.UserResponseDTO;
 import com.raktim.fiverclone.user.model.UserEntity;
 import com.raktim.fiverclone.user.model.UserRole;
+import com.raktim.fiverclone.user.model.UserStatus;
 import org.apache.catalina.User;
 
+import java.time.LocalDate;
 import java.util.UUID;
 
 public class UserTestDataFactory {
@@ -14,12 +16,17 @@ public class UserTestDataFactory {
                 .username("Raktim")
                 .password("123456")
                 .email("raktim@gmail.com")
-                .age(20)
                 .address("Australia")
                 .role(UserRole.BUYER)
                 .firstName("Raktim")
                 .lastName("Thapa")
-                .phoneNumber("0406055500");
+                .phoneNumber("0406055500")
+                .timeZone("Nepal")
+                .country("Nepal")
+                .bio("Random")
+                .status(UserStatus.ACTIVE)
+                .language("English")
+                .dateOfBirth(LocalDate.of(2001, 2, 25));
     }
 
     public static UserEntity.UserEntityBuilder validUserEntity() {
@@ -30,9 +37,14 @@ public class UserTestDataFactory {
                 .lastName("Thapa")
                 .role(UserRole.SELLER)
                 .email("raktim@gmail.com")
-                .age(20)
                 .address("Australia")
-                .phoneNumber("0406055500");
+                .phoneNumber("0406055500")
+                .timeZone("Nepal")
+                .country("Nepal")
+                .bio("Random")
+                .status(UserStatus.ACTIVE)
+                .language("English")
+                .dateOfBirth(LocalDate.of(2001, 2, 25));
     }
 
     public static UserResponseDTO.UserResponseDTOBuilder validUserResponseDTO() {
@@ -42,7 +54,6 @@ public class UserTestDataFactory {
                 .id(id)
                 .email("raktim@gmail.com")
                 .address("Australia")
-                .age(20)
                 .role(UserRole.SELLER)
                 .phoneNumber("0406055500");
 
