@@ -4,9 +4,7 @@ import com.raktim.fiverclone.common.exceptions.BusinessException;
 import com.raktim.fiverclone.common.utils.GenerateUploadUrlResult;
 import com.raktim.fiverclone.common.utils.S3Service;
 import com.raktim.fiverclone.common.utils.ServiceExecutor;
-import com.raktim.fiverclone.fileUpload.dto.CompleteFileUploadResponseDto;
-import com.raktim.fiverclone.fileUpload.dto.FileUploadDto;
-import com.raktim.fiverclone.fileUpload.dto.GetUploadUrlResponseDto;
+import com.raktim.fiverclone.fileUpload.dto.*;
 import com.raktim.fiverclone.fileUpload.model.UserFileEntity;
 import com.raktim.fiverclone.fileUpload.repo.FileUploadRepo;
 import com.raktim.fiverclone.fileUpload.utils.FileStatus;
@@ -20,6 +18,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -38,6 +37,40 @@ public class FileUploadServiceImpl implements FileUploadService {
         return ServiceExecutor.execute(
                 () -> handleUploadUrlGeneration(fileUploadDto)
         );
+    }
+
+    @Override
+    @Transactional
+    public List<SearchFileResponseDto> searchFile(
+            SearchFileRequestDto dto
+    ) {
+        return ServiceExecutor.execute(() -> this.handlePresignedUrlGeneration(dto));
+    }
+
+    private List<SearchFileResponseDto> handlePresignedUrlGeneration(
+            SearchFileRequestDto dto
+    ) {
+        log.info("Getting files for details {}", dto);
+
+        UserEntity user = userService.findUserByIdOrThrow(dto.userId());
+
+        log.info("Getting files for user {} and status {} and type {}",
+                user.getId(), dto.status(), dto.type());
+        List<UserFileEntity> files = fileUploadRepo.findAllByUser_IdAndStatusAndType(
+                dto.userId(),
+                dto.status(),
+                dto.type()
+        );
+
+        log.info("{} files found for user with id {}", files.size(), user.getId());
+
+        return files.parallelStream()
+                .map(file -> SearchFileResponseDto.builder()
+                        .id(file.getId())
+                        .imageUrl(s3Service.getImageUrl(file.getS3Key()))
+                        .type(file.getType())
+                        .build()
+                ).toList();
     }
 
     private GetUploadUrlResponseDto handleUploadUrlGeneration(

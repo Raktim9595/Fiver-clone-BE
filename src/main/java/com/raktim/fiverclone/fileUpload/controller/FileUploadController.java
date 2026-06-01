@@ -1,8 +1,6 @@
 package com.raktim.fiverclone.fileUpload.controller;
 
-import com.raktim.fiverclone.fileUpload.dto.CompleteFileUploadResponseDto;
-import com.raktim.fiverclone.fileUpload.dto.FileUploadDto;
-import com.raktim.fiverclone.fileUpload.dto.GetUploadUrlResponseDto;
+import com.raktim.fiverclone.fileUpload.dto.*;
 import com.raktim.fiverclone.fileUpload.service.FileUploadService;
 import com.raktim.fiverclone.fileUpload.utils.FileStatus;
 import com.raktim.fiverclone.user.model.UserPrincipal;
@@ -16,6 +14,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -77,5 +76,17 @@ public class FileUploadController {
                         FileStatus.FAILED
                 )
         );
+    }
+
+    @PostMapping("/search")
+    @SecurityRequirement(name = "bearerAuth")
+    @Operation(
+            summary = "Search the file",
+            description = "Endpoint to get the read-url for browser"
+    )
+    public ResponseEntity<List<SearchFileResponseDto>> searchFile(
+            @Valid @RequestBody SearchFileRequestDto searchFileRequestDto
+    ) {
+        return ResponseEntity.ok(fileUploadService.searchFile(searchFileRequestDto));
     }
 }

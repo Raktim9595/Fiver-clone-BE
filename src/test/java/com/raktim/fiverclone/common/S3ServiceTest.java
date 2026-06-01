@@ -9,6 +9,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.util.ReflectionTestUtils;
 import software.amazon.awssdk.services.s3.presigner.S3Presigner;
+import software.amazon.awssdk.services.s3.presigner.model.GetObjectPresignRequest;
+import software.amazon.awssdk.services.s3.presigner.model.PresignedGetObjectRequest;
 import software.amazon.awssdk.services.s3.presigner.model.PresignedPutObjectRequest;
 import software.amazon.awssdk.services.s3.presigner.model.PutObjectPresignRequest;
 
@@ -78,8 +80,7 @@ class S3ServiceTest {
     @Test
     @DisplayName("""
             Given generateUploadUrl,
-            When called And it throw exception, Then it should throw proper"
-            "error messages
+            When called And it throw exception, Then it should throw proper error messages
             """)
     void generateUploadUrl_exception() throws Exception {
         when(s3Presigner.presignPutObject(any(PutObjectPresignRequest.class)))
@@ -99,4 +100,46 @@ class S3ServiceTest {
                 .presignPutObject(any(PutObjectPresignRequest.class));
     }
 
+    @Test
+    @DisplayName("""
+            Given getImageUrl, When called
+            And it does not throws any exception,
+            Then it should return proper result
+            """)
+    void getImageUrl_valid() throws Exception {
+        PresignedGetObjectRequest presignedRequest = mock(PresignedGetObjectRequest.class);
+
+        URL url = URI
+                .create("https://test-bucket.s3.amazonaws.com/get")
+                .toURL();
+
+        when(s3Presigner.presignGetObject(any(GetObjectPresignRequest.class)))
+                .thenReturn(presignedRequest);
+
+        when(presignedRequest.url()).thenReturn(url);
+        String result = s3Service.getImageUrl("test-file.png");
+
+        assertEquals("https://test-bucket.s3.amazonaws.com/get", result);
+        verify(s3Presigner, times(1)).presignGetObject(any(GetObjectPresignRequest.class));
+    }
+
+    @Test
+    @DisplayName("""
+            Given getImageUrl, When called
+            And it does not throws exception,
+            Then it should display proper messages
+            """)
+    void getImageUrl_exception() throws Exception {
+        when(s3Presigner.presignGetObject(any(GetObjectPresignRequest.class)))
+                .thenThrow(new RuntimeException("AWS error"));
+
+        ExceptionTestUtil.assertBusinessException(
+                HttpStatus.INTERNAL_SERVER_ERROR,
+                "UNABLE_TO_GET_IMAGE_URL",
+                "AWS error",
+                () -> s3Service.getImageUrl("test-file.png")
+        );
+
+        verify(s3Presigner, times(1)).presignGetObject(any(GetObjectPresignRequest.class));
+    }
 }
