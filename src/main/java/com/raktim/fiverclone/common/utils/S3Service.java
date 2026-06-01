@@ -5,8 +5,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import software.amazon.awssdk.services.s3.model.GetObjectRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 import software.amazon.awssdk.services.s3.presigner.S3Presigner;
+import software.amazon.awssdk.services.s3.presigner.model.GetObjectPresignRequest;
 import software.amazon.awssdk.services.s3.presigner.model.PutObjectPresignRequest;
 
 import java.time.Duration;
@@ -41,6 +43,29 @@ public class S3Service {
         throw new BusinessException(
                 HttpStatus.INTERNAL_SERVER_ERROR,
                 "UNABLE_TO_GENERATE_UPLOAD_URL",
+                ex.getMessage()
+        );
+    }}
+
+    public String getImageUrl(String key) {
+    try {
+        GetObjectRequest getObjectRequest = GetObjectRequest.builder()
+                .bucket(bucket)
+                .key(key)
+                .build();
+
+        GetObjectPresignRequest presignRequest = GetObjectPresignRequest.builder()
+                .signatureDuration(Duration.ofMinutes(10))
+                .getObjectRequest(getObjectRequest)
+                .build();
+
+        return s3Presigner.presignGetObject(presignRequest)
+                .url()
+                .toString();
+    } catch (RuntimeException ex) {
+        throw new BusinessException(
+                HttpStatus.INTERNAL_SERVER_ERROR,
+                "UNABLE_TO_GET_IMAGE_URL",
                 ex.getMessage()
         );
     }}
