@@ -89,4 +89,18 @@ public class FileUploadController {
     ) {
         return ResponseEntity.ok(fileUploadService.searchFile(searchFileRequestDto));
     }
+
+    @DeleteMapping("/{id}")
+    @SecurityRequirement(name = "bearerAuth")
+    @Operation(
+            summary = "Delete the file by id",
+            description = "Endpoint to find the file and delete if the file exists"
+    )
+    public ResponseEntity<String> deleteFile(
+            @PathVariable UUID id,
+            @AuthenticationPrincipal UserPrincipal user
+    ) {
+        fileUploadService.deleteFile(id, user.getId());
+        return ResponseEntity.ok("Successfully deleted the file");
+    }
 }

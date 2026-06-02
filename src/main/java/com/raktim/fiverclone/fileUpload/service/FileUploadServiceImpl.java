@@ -147,6 +147,37 @@ public class FileUploadServiceImpl implements FileUploadService {
         );
     }
 
+    @Override
+    @Transactional
+    public void deleteFile(UUID id, UUID userId) {
+        log.info("Deleting file {}", id);
+
+        UserFileEntity file = this.findByIdOrThrow(id);
+
+        // validate the user is the owner of the file
+        if (!file.getUser().getId().equals(userId)) {
+            throw new BusinessException(
+                    HttpStatus.FORBIDDEN,
+                    "FORBIDDEN_TO_ACCESS",
+                    "You are not allowed to delete the file."
+            );
+        }
+
+        s3Service.deleteFile(file.getS3Key());
+        fileUploadRepo.delete(file);
+        log.info("Successfully deleted file {}", id);
+    }
+
+    public UserFileEntity findByIdOrThrow(UUID id) {
+        return fileUploadRepo.findById(id).orElseThrow(
+                () -> new BusinessException(
+                        HttpStatus.NOT_FOUND,
+                        "FILE_NOT_FOUND",
+                        "File %s not found".formatted(id)
+                )
+        );
+    }
+
     private String generateS3Key(FileUploadDto dto) {
         String cleanFileName = sanitizeFileName(dto.fileName());
         return "users/%s/%s/%s-%s".formatted(
