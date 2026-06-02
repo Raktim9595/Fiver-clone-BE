@@ -8,6 +8,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.util.ReflectionTestUtils;
+import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
 import software.amazon.awssdk.services.s3.presigner.S3Presigner;
 import software.amazon.awssdk.services.s3.presigner.model.GetObjectPresignRequest;
 import software.amazon.awssdk.services.s3.presigner.model.PresignedGetObjectRequest;
@@ -26,11 +28,13 @@ class S3ServiceTest {
 
     private S3Presigner s3Presigner;
     private S3Service s3Service;
+    private S3Client s3Client;
 
     @BeforeEach
     void setUp() {
         s3Presigner = mock(S3Presigner.class);
-        s3Service = new S3Service(s3Presigner);
+        s3Client = mock(S3Client.class);
+        s3Service = new S3Service(s3Presigner, s3Client);
 
         ReflectionTestUtils.setField(
                 s3Service,
@@ -141,5 +145,19 @@ class S3ServiceTest {
         );
 
         verify(s3Presigner, times(1)).presignGetObject(any(GetObjectPresignRequest.class));
+    }
+
+    @Test
+    @DisplayName("""
+            Given deleteFile, When called
+            And it does not throws any exception
+            Then it should delete the file using S3client
+            """)
+    void deleteFile_valid() throws Exception {
+        when(s3Client.deleteObject(any(DeleteObjectRequest.class)))
+                .thenReturn(null);
+
+        s3Service.deleteFile("test-file.png");
+        verify(s3Client, times(1)).deleteObject(any(DeleteObjectRequest.class));
     }
 }

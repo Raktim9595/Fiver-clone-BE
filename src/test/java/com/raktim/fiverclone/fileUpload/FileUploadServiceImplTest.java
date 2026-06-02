@@ -332,4 +332,92 @@ public class FileUploadServiceImplTest {
                 () -> assertEquals(FileStatus.UPLOADED, result.status())
         );
     }
+
+    @Test
+    @DisplayName("""
+            Given findByIdOrThrow, When called,
+            And file is not found,
+            Then it throws FileNotFound exception
+            """)
+    void findByIdOrThrow_fileNotFound() {
+        UUID fileId = UUID.randomUUID();
+        when(fileUploadRepo.findById(fileId)).thenReturn(Optional.empty());
+        ExceptionTestUtil.assertBusinessException(
+                HttpStatus.NOT_FOUND,
+                "FILE_NOT_FOUND",
+                "File %s not found".formatted(fileId),
+                () -> fileUploadService.findByIdOrThrow(fileId)
+        );
+    }
+
+    @Test
+    @DisplayName("""
+            Given findByIdOrThrow, When called,
+            And file is found,
+            Then it returns the file
+            """)
+    void findByIdOrThrow_fileFound() {
+        UUID fileId = UUID.randomUUID();
+        UserFileEntity foundFile = FileUploadTestData.validUserFileEntity()
+                .build();
+        foundFile.setId(fileId);
+
+        when(fileUploadRepo.findById(fileId)).thenReturn(Optional.of(foundFile));
+        UserFileEntity result = fileUploadService.findByIdOrThrow(fileId);
+
+        assertEquals(foundFile, result);
+        assertInstanceOf(UserFileEntity.class,result);
+    }
+
+    @Test
+    @DisplayName("""
+            When called deleteFile, And user does not own the file,
+            Then it should show error of FORBIDDEN
+            """)
+    void deleteFile_user_has_no_access_to_delete_file() {
+        UUID fileId = UUID.randomUUID();
+        UUID userId = UUID.randomUUID();
+        UUID diffUserId = UUID.randomUUID();
+
+        UserEntity user = new UserEntity();
+        user.setId(userId);
+
+        UserFileEntity foundFile = FileUploadTestData.validUserFileEntity()
+                .user(user)
+                .build();
+        foundFile.setId(fileId);
+
+        when(fileUploadRepo.findById(fileId)).thenReturn(Optional.of(foundFile));
+
+        ExceptionTestUtil.assertBusinessException(
+                HttpStatus.FORBIDDEN,
+                "FORBIDDEN_TO_ACCESS",
+                "You are not allowed to delete the file.",
+                () -> fileUploadService.deleteFile(fileId, diffUserId)
+        );
+    }
+
+    @Test
+    @DisplayName("""
+            When called deleteFile, And user owns the file,
+            And there is no error, Then it should delete the file
+            """)
+    void deleteFile_success() {
+        UUID fileId = UUID.randomUUID();
+        UUID userId = UUID.randomUUID();
+
+        UserEntity user = new UserEntity();
+        user.setId(userId);
+
+        UserFileEntity foundFile = FileUploadTestData.validUserFileEntity()
+                .user(user)
+                .build();
+        foundFile.setId(fileId);
+
+        when(fileUploadRepo.findById(fileId)).thenReturn(Optional.of(foundFile));
+
+        fileUploadService.deleteFile(fileId, userId);
+        verify(fileUploadRepo, times(1)).delete(foundFile);
+        verify(s3Service, times(1)).deleteFile(foundFile.getS3Key());
+    }
 }

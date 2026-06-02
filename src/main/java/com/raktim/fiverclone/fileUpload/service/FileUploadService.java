@@ -12,4 +12,5 @@ public interface FileUploadService {
     CompleteFileUploadResponseDto completeFileUpload(UUID id, UUID userId, FileStatus fileStatus);
     UserFileEntity findByIdAndUserIdOrThrow(UUID id, UUID userId);
     List<SearchFileResponseDto> searchFile(SearchFileRequestDto dto);
+    void deleteFile(UUID id, UUID userId);
 }
