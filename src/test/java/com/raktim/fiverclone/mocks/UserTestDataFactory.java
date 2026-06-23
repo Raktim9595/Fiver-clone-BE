@@ -1,5 +1,6 @@
 package com.raktim.fiverclone.mocks;
 
+import com.raktim.fiverclone.user.DTO.UpdateUserDto;
 import com.raktim.fiverclone.user.DTO.UserDTO;
 import com.raktim.fiverclone.user.DTO.UserResponseDTO;
 import com.raktim.fiverclone.user.model.UserEntity;
@@ -57,5 +58,19 @@ public class UserTestDataFactory {
                 .role(UserRole.SELLER)
                 .phoneNumber("0406055500");
 
+    }
+
+    public static UpdateUserDto.UpdateUserDtoBuilder validUpdateUserDto() {
+        return UpdateUserDto.builder()
+                .firstName("Raktim")
+                .lastName("Thapa")
+                .bio("Updated bio")
+                .email("raktim@gmail.com")
+                .country("Nepal")
+                .phoneNumber("0406055500")
+                .username("RaktimThapa")
+                .role(UserRole.SELLER)
+                .address("Australia")
+                .dateOfBirth(LocalDate.of(2004, 10, 22));
     }
 }

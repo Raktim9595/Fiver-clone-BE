@@ -3,6 +3,7 @@ package com.raktim.fiverclone.user.service;
 import com.raktim.fiverclone.common.DTO.PaginatedResponseDto;
 import com.raktim.fiverclone.common.exceptions.BusinessException;
 import com.raktim.fiverclone.common.utils.PaginationUtil;
+import com.raktim.fiverclone.user.DTO.UpdateUserDto;
 import com.raktim.fiverclone.user.DTO.UserDTO;
 import com.raktim.fiverclone.user.DTO.UserListResponseDto;
 import com.raktim.fiverclone.user.DTO.UserResponseDTO;
@@ -18,6 +19,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
@@ -75,15 +77,23 @@ public class UserServiceImpl implements UserService {
     @Override
     public @NotNull UserEntity findUserByIdOrThrow(UUID id) {
         log.info("Finding user by id {}", id);
-        UserEntity userEntity = userRepo.findById(id).orElse(null);
-        if (userEntity == null) {
-            throw new BusinessException(
-                    HttpStatus.NOT_FOUND,
-                    "USER_NOT_FOUND",
-                    "User with id " + id + " not found"
-            );
-        }
-        return userEntity;
+        return userRepo.findById(id)
+                .orElseThrow(() -> new BusinessException(
+                        HttpStatus.NOT_FOUND,
+                        "USER_NOT_FOUND",
+                        "User with id " + id + " not found"
+                ));
+    }
+
+    @Override
+    @Transactional
+    public UserResponseDTO updateUser(UUID id, UpdateUserDto updatedUser) {
+        log.info("Updating user {} with details {}", id, updatedUser);
+        UserEntity foundUser = findUserByIdOrThrow(id);
+
+        // Updating the foundUser from mapStruct and then let transactional context handle the update
+        userMapper.updateUserFromDto(updatedUser, foundUser);
+        return userMapper.toDetailResponseDTO(foundUser);
     }
 
     private void validateUserForCreation(UserEntity user) {

@@ -2,6 +2,7 @@ package com.raktim.fiverclone.user.controller;
 
 import com.raktim.fiverclone.common.DTO.PaginatedResponseDto;
 import com.raktim.fiverclone.common.DTO.SearchRequestDto;
+import com.raktim.fiverclone.user.DTO.UpdateUserDto;
 import com.raktim.fiverclone.user.DTO.UserDTO;
 import com.raktim.fiverclone.user.DTO.UserListResponseDto;
 import com.raktim.fiverclone.user.DTO.UserResponseDTO;
@@ -68,6 +69,20 @@ public class UserController {
             Authentication authentication
             ) {
         UserResponseDTO result = userService.findByUsernameOrThrow(authentication.getName());
+        return ResponseEntity.ok(result);
+    }
+
+    @PutMapping("user/{id}")
+    @Operation(
+            summary = "Update user",
+            description = "Endpoint to update the details of the passed user"
+    )
+    @SecurityRequirement(name = "bearerAuth")
+    public ResponseEntity<UserResponseDTO> updateUser(
+            @PathVariable UUID id,
+            @Valid @RequestBody UpdateUserDto userDTO
+    ) {
+        UserResponseDTO result = userService.updateUser(id, userDTO);
         return ResponseEntity.ok(result);
     }
 }
