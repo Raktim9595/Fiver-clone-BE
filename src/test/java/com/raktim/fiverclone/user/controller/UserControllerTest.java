@@ -3,6 +3,7 @@ package com.raktim.fiverclone.user.controller;
 import com.raktim.fiverclone.common.DTO.SearchRequestDto;
 import com.raktim.fiverclone.common.utils.JWTUtil;
 import com.raktim.fiverclone.mocks.UserTestDataFactory;
+import com.raktim.fiverclone.user.DTO.UpdateUserDto;
 import com.raktim.fiverclone.user.DTO.UserDTO;
 import com.raktim.fiverclone.user.DTO.UserResponseDTO;
 import com.raktim.fiverclone.user.service.CustomUserDetailService;
@@ -24,8 +25,7 @@ import java.util.List;
 import java.util.UUID;
 
 import static org.mockito.Mockito.verify;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import org.springframework.security.test.context.support.WithMockUser;
 
@@ -115,4 +115,24 @@ public class UserControllerTest {
         Mockito.verify(userService)
                 .findByUsernameOrThrow("Raktim");
     }
+
+    @Test
+    @DisplayName("""
+            When called endpoint /users/{userId},
+            Then it should call the respective method in the service
+            """)
+    void doneAndDone() throws Exception {
+        UUID userId = UUID.randomUUID();
+        UpdateUserDto updateDto = UserTestDataFactory
+                .validUpdateUserDto()
+                        .build();
+
+        mockMvc.perform(put("/api/user/" + userId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(updateDto)))
+                        .andExpect(status().isOk());
+
+        Mockito.verify(userService).updateUser(userId, updateDto);
+    }
+
 }

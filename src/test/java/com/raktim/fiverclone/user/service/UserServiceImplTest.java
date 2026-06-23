@@ -1,7 +1,9 @@
 package com.raktim.fiverclone.user.service;
 
 import com.raktim.fiverclone.common.DTO.PaginatedResponseDto;
+import com.raktim.fiverclone.common.exceptions.BusinessException;
 import com.raktim.fiverclone.mocks.UserTestDataFactory;
+import com.raktim.fiverclone.user.DTO.UpdateUserDto;
 import com.raktim.fiverclone.user.DTO.UserDTO;
 import com.raktim.fiverclone.user.DTO.UserListResponseDto;
 import com.raktim.fiverclone.user.DTO.UserResponseDTO;
@@ -228,6 +230,35 @@ public class UserServiceImplTest {
         assertInstanceOf(UserResponseDTO.class, result);
         assertEquals(username, result.username());
         verify(userRepo).findByUsername(username);
+    }
+
+    @Test
+    @DisplayName("""
+            Given updateUser method when called,
+            And valid userId and update DTO is passed,
+            And user is not found and update is a fail,
+            Then it should throw exception
+            """)
+    public void testUpdateUser_Failed() {
+        UUID userId = UUID.randomUUID();
+
+        UpdateUserDto updateDto = UpdateUserDto.builder()
+                .firstName("Raktim")
+                .build();
+
+        when(userRepo.findById(userId))
+                .thenReturn(Optional.empty());
+
+        assertThrows(BusinessException.class,
+                () -> userService.updateUser(userId, updateDto));
+
+        verify(userRepo).findById(userId);
+        ExceptionTestUtil.assertBusinessException(
+                HttpStatus.NOT_FOUND,
+                "USER_NOT_FOUND",
+                "User with id " +  userId + " not found",
+                () -> userService.updateUser(userId, updateDto)
+        );
     }
 
 }

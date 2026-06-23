@@ -1,6 +1,7 @@
 package com.raktim.fiverclone.user.service;
 
 import com.raktim.fiverclone.common.DTO.PaginatedResponseDto;
+import com.raktim.fiverclone.user.DTO.UpdateUserDto;
 import com.raktim.fiverclone.user.DTO.UserDTO;
 import com.raktim.fiverclone.user.DTO.UserListResponseDto;
 import com.raktim.fiverclone.user.DTO.UserResponseDTO;
@@ -14,4 +15,5 @@ public interface UserService {
     PaginatedResponseDto<UserListResponseDto> findAllUsers(Integer pageNumber, Integer pageSize);
     UserEntity findUserByIdOrThrow(UUID id);
     UserResponseDTO findByUsernameOrThrow(String username);
+    UserResponseDTO updateUser(UUID id, UpdateUserDto updateUserDto);
 }
