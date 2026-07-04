@@ -23,10 +23,10 @@ public abstract class BaseEntity {
     private UUID id;
 
     @CreatedDate
-    @Column(nullable = false, updatable = false)
+    @Column(nullable = false, updatable = false, columnDefinition = "timestamp with time zone")
     private Instant createdAt;
 
     @LastModifiedDate
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "timestamp with time zone")
     private Instant updatedAt;
 }

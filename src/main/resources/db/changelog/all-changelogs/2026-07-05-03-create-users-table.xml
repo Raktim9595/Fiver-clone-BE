@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="create-users-table" author="Raktim">
+
+        <createTable tableName="users">
+
+            <!-- BaseEntity -->
+
+            <column name="id"
+                    type="UUID"
+                    defaultValueComputed="gen_random_uuid()">
+                <constraints primaryKey="true"
+                             nullable="false"/>
+            </column>
+
+            <column
+                    name="created_at"
+                    type="TIMESTAMP WITH TIME ZONE"
+                    defaultValueComputed="CURRENT_TIMESTAMP"
+            >
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="updated_at" type="timestamp with time zone">
+                <constraints nullable="false"/>
+            </column>
+
+            <!-- User fields -->
+
+            <column name="first_name" type="VARCHAR(100)"/>
+
+            <column name="last_name" type="VARCHAR(100)"/>
+
+            <column name="username" type="VARCHAR(50)">
+                <constraints nullable="false"
+                             unique="true"/>
+            </column>
+
+            <column name="password" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="email" type="VARCHAR(255)">
+                <constraints nullable="false"
+                             unique="true"/>
+            </column>
+
+            <column name="address" type="TEXT"/>
+
+            <column name="phone_number" type="VARCHAR(30)"/>
+
+            <column name="bio" type="TEXT"/>
+
+            <column name="time_zone" type="VARCHAR(100)"/>
+
+            <column name="country" type="VARCHAR(100)"/>
+
+            <column name="language" type="VARCHAR(100)"/>
+
+            <column name="date_of_birth" type="DATE"/>
+
+            <column name="status"
+                    type="VARCHAR(20)"
+                    defaultValue="ACTIVE">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="role"
+                    type="VARCHAR(20)"
+                    defaultValue="BUYER">
+                <constraints nullable="false"/>
+            </column>
+
+        </createTable>
+
+        <createIndex
+                indexName="idx_users_username"
+                tableName="users"
+                unique="true">
+            <column name="username"/>
+        </createIndex>
+
+        <createIndex
+                indexName="idx_users_email"
+                tableName="users"
+                unique="true">
+            <column name="email"/>
+        </createIndex>
+
+    </changeSet>
+
+
+</databaseChangeLog>

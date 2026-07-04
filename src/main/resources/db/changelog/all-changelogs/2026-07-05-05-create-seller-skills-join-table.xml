@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="create-seller-skills-join-table" author="Raktim">
+
+        <createTable tableName="seller_skills">
+
+            <column name="seller_id" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="skill_id" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+
+        </createTable>
+
+        <addPrimaryKey
+                tableName="seller_skills"
+                columnNames="seller_id, skill_id"
+                constraintName="pk_seller_skills"/>
+
+        <addForeignKeyConstraint
+                baseTableName="seller_skills"
+                baseColumnNames="seller_id"
+                referencedTableName="sellers"
+                referencedColumnNames="id"
+                constraintName="fk_seller_skills_seller"/>
+
+        <addForeignKeyConstraint
+                baseTableName="seller_skills"
+                baseColumnNames="skill_id"
+                referencedTableName="skills"
+                referencedColumnNames="id"
+                constraintName="fk_seller_skills_skill"/>
+
+        <createIndex indexName="idx_seller_skills_seller_id"
+                     tableName="seller_skills">
+            <column name="seller_id"/>
+        </createIndex>
+
+        <createIndex indexName="idx_seller_skills_skill_id"
+                     tableName="seller_skills">
+            <column name="skill_id"/>
+        </createIndex>
+
+    </changeSet>
+</databaseChangeLog>

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="create-seller-table" author="Raktim">
+        <createTable tableName="sellers">
+            <column name="id" type="UUID" defaultValueComputed="gen_random_uuid()">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column
+                    name="created_at"
+                    type="TIMESTAMP WITH TIME ZONE"
+                    defaultValueComputed="CURRENT_TIMESTAMP"
+            >
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at"  type="TIMESTAMP WITH TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_id"
+                    type="UUID">
+                <constraints nullable="false"
+                             unique="true"
+                             referencedTableName="users"
+                             referencedColumnNames="id"
+                             foreignKeyName="fk_seller_user"/>
+            </column>
+
+            <column name="description"
+                    type="TEXT">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="experience_id"
+                    type="UUID">
+                <constraints nullable="false"
+                             referencedTableName="experience_level"
+                             referencedColumnNames="id"
+                             foreignKeyName="fk_seller_experience"/>
+            </column>
+
+            <column name="total_orders"
+                    type="INTEGER"
+                    defaultValueNumeric="0">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="total_earnings"
+                    type="NUMERIC(19,2)"
+                    defaultValueNumeric="0.00">
+                <constraints nullable="false"/>
+            </column>
+
+        </createTable>
+
+    </changeSet>
+</databaseChangeLog>
