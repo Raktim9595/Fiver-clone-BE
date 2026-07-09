@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="create-language-table" author="Raktim">
+        <createTable tableName="language">
+            <column name="id"
+                    type="uuid"
+                    defaultValueComputed="gen_random_uuid()">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="code" type="varchar(5)">
+                <constraints unique="true" nullable="false" />
+            </column>
+            <column name="language" type="varchar(20)">
+                <constraints unique="true" nullable="false" />
+            </column>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>
