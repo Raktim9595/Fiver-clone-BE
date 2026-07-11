@@ -17,7 +17,7 @@ import java.util.List;
 @RequestMapping("/api/country")
 @SecurityRequirement(name = "bearerAuth")
 @RequiredArgsConstructor
-@Tag(name = "Country", description = "Endpoints for ")
+@Tag(name = "Country", description = "Endpoints for countries API")
 public class CountryController {
     private final CountryService countryService;
 
@@ -25,7 +25,6 @@ public class CountryController {
     @Operation(
             summary = "Get a list of countries",
             description = "Endpoint to get the list of all the countries available"
-
     )
     public ResponseEntity<List<CountryEntity>> getAllCountries() {
         return ResponseEntity.ok(countryService.findAll());
