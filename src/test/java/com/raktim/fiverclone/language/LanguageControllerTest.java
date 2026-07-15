@@ -37,11 +37,11 @@ public class LanguageControllerTest {
 
     @Test
     @DisplayName("""
-            When called GET /api/langugae When called,
+            When called GET /api/info/langugae When called,
             Then it should hit the respective service method and return proper data
             """)
     public void testFindAllLanguages() throws Exception {
-        mockMvc.perform(get("/api/language")
+        mockMvc.perform(get("/api/info/language")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 

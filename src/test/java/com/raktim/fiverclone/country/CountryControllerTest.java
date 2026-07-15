@@ -37,11 +37,11 @@ public class CountryControllerTest {
 
     @Test
     @DisplayName("""
-            When called GET /api/country When called,
+            When called GET /api/info/country When called,
             Then it should hit the respective service method and return proper data
             """)
     public void test_findAllCountries() throws Exception {
-        mockMvc.perform(get("/api/country")
+        mockMvc.perform(get("/api/info/country")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 

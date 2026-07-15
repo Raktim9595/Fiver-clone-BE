@@ -37,11 +37,11 @@ public class TimezoneControllerTest {
 
     @Test
     @DisplayName("""
-            When called GET /api/langugae When called,
+            When called GET /api/info/timezone When called,
             Then it should hit the respective service method and return proper data
             """)
     public void testFindAllLanguages() throws Exception {
-        mockMvc.perform(get("/api/timezone")
+        mockMvc.perform(get("/api/info/timezone")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 

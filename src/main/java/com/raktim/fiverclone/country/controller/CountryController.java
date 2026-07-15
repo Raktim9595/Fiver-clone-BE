@@ -3,7 +3,6 @@ package com.raktim.fiverclone.country.controller;
 import com.raktim.fiverclone.country.model.CountryEntity;
 import com.raktim.fiverclone.country.service.CountryService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -14,8 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/country")
-@SecurityRequirement(name = "bearerAuth")
+@RequestMapping("/api/info/country")
 @RequiredArgsConstructor
 @Tag(name = "Country", description = "Endpoints for countries API")
 public class CountryController {
