@@ -3,7 +3,6 @@ package com.raktim.fiverclone.timezone.controller;
 import com.raktim.fiverclone.timezone.model.TimeZoneEntity;
 import com.raktim.fiverclone.timezone.service.TimezoneService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -15,8 +14,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/timezone")
-@SecurityRequirement(name = "bearerAuth")
+@RequestMapping("/api/info/timezone")
 @Tag(name = "Timezone", description = "Endpoints for timezone API")
 public class TimezoneController {
     private final TimezoneService timezoneService;
