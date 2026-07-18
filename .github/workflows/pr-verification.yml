@@ -1,16 +1,40 @@
-name: PR Verification
+name: Backend PR Verification
 
 on:
   pull_request:
-    branches: [ "main" ]
-  merge_group:
+    branches:
+      - master
+
+permissions:
+  contents: read
+
+concurrency:
+  group: backend-tests-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
 
 jobs:
   test:
-    runs-on: self-hosted
+    name: Backend Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_DB: fiver_clone_test
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd="pg_isready -U postgres -d fiver_clone_test"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
 
     steps:
-      - name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Set up Java
@@ -20,5 +44,13 @@ jobs:
           java-version: '25'
           cache: maven
 
+      - name: Make Maven wrapper executable
+        run: chmod +x mvnw
+
       - name: Run tests
-        run: mvn clean verify
+        run: ./mvnw test
+        env:
+          SPRING_PROFILES_ACTIVE: test
+          SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/fiver_clone_test
+          SPRING_DATASOURCE_USERNAME: postgres
+          SPRING_DATASOURCE_PASSWORD: postgres
