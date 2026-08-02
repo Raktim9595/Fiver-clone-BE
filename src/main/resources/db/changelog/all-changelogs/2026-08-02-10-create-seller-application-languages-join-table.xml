@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="create-seller-application-languages-join-table" author="Raktim">
+        <createTable tableName="seller_application_languages">
+            <column name="application_id" type="uuid">
+                <constraints nullable="false" />
+            </column>
+            
+            <column name="language_id" type="uuid">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+        
+        <addPrimaryKey
+                tableName="seller_application_languages"
+                columnNames="application_id, language_id"
+                constraintName="pk_seller_application_languages"
+        />
+        <addForeignKeyConstraint
+                constraintName="fk_seller_application_languages_application"
+                baseTableName="seller_application_languages"
+                baseColumnNames="application_id"
+                referencedTableName="seller_applications"
+                referencedColumnNames="id"
+                onDelete="CASCADE"/>
+
+        <addForeignKeyConstraint
+                constraintName="fk_seller_application_languages_language"
+                baseTableName="seller_application_languages"
+                baseColumnNames="language_id"
+                referencedTableName="languages"
+                referencedColumnNames="id"
+                onDelete="CASCADE"/>
+
+        <createIndex
+                tableName="seller_application_languages"
+                indexName="idx_seller_application_languages_language_id">
+            <column name="language_id"/>
+        </createIndex>
+
+        <rollback>
+            <dropTable
+                    tableName="seller_application_languages"
+                    cascadeConstraints="true"/>
+        </rollback>
+    </changeSet>
+</databaseChangeLog>

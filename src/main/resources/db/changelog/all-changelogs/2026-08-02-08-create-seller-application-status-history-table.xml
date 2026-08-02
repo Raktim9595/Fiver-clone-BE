@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="create-seller-application-history-table" author="Raktim">
+        <createTable tableName="seller_application_status_history">
+            <column name="id" type="uuid" defaultValueComputed="gen_random_uuid()">
+                <constraints primaryKey="true" />
+            </column>
+
+            <column name="application_id" type="uuid">
+                <constraints
+                        nullable="false"
+                        referencedTableName="seller_applications"
+                        referencedColumnNames="id"
+                        foreignKeyName="fk_seller_application_status_history"
+                />
+            </column>
+
+            <column name="previous_status" type="varchar(30)">
+                <constraints nullable="false" />
+            </column>
+
+            <column name="new_status" type="varchar(30)">
+                <constraints nullable="false" />
+            </column>
+
+            <column name="changed_by_user_id" type="uuid">
+                <constraints
+                        nullable="false"
+                        referencedTableName="users"
+                        referencedColumnNames="id"
+                        foreignKeyName="fk_seller_application_status_changed_by_user"
+                />
+            </column>
+
+            <column name="reason" type="varchar(2000)" />
+
+            <column name="created_at" type="TIMESTAMP WITH TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>

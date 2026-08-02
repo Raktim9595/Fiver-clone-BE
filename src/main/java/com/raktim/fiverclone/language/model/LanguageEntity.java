@@ -10,7 +10,7 @@ import org.hibernate.annotations.UuidGenerator;
 import java.util.UUID;
 
 @Entity
-@Table(name = "language")
+@Table(name = "languages")
 @Data
 @Builder(toBuilder = true)
 @NoArgsConstructor

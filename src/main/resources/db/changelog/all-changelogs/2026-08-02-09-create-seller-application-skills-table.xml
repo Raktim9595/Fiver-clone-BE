@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="create-seller-application-skills-table" author="Raktim">
+        <createTable tableName="seller_applicaion_skills">
+            <column name="id" type="uuid" defaultValueComputed="gen_random_uuid()">
+                <constraints primaryKey="true" nullable="false" />
+            </column>
+            <column name="application_id" type="uuid">
+                <constraints
+                        nullable="false"
+                        referencedTableName="seller_applications"
+                        referencedColumnNames="id"
+                        foreignKeyName="fk_seller_application_user"
+                />
+            </column>
+
+            <column name="skill_id" type="uuid">
+                <constraints
+                        nullable="false"
+                        referencedTableName="skills"
+                        referencedColumnNames="id"
+                        foreignKeyName="fk_seller_applications_skills_consisting"
+                />
+            </column>
+
+            <column name="years_of_experience" type="int" />
+            <column name="proficiency_level" type="varchar(30)" />
+        </createTable>
+    </changeSet>
+</databaseChangeLog>

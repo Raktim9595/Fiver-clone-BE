@@ -1,0 +1,15 @@
+package com.raktim.fiverclone.seller.enums;
+
+public enum SellerApplicationSection {
+    PERSONAL_PROFILE,
+    PROFESSIONAL_INFORMATION,
+    SKILLS,
+    LANGUAGES,
+    EDUCATION,
+    CERTIFICATIONS,
+    PORTFOLIO,
+    EMAIL_VERIFICATION,
+    PHONE_VERIFICATION,
+    IDENTITY_VERIFICATION,
+    ADDRESS_VERIFICATION
+}

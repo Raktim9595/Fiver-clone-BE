@@ -5,7 +5,7 @@
                    https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
 
     <changeSet id="create-language-table" author="Raktim">
-        <createTable tableName="language">
+        <createTable tableName="languages">
             <column name="id"
                     type="uuid"
                     defaultValueComputed="gen_random_uuid()">

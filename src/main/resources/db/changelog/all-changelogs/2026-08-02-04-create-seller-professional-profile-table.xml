@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="create-seller-professional-profile-table" author="Raktim">
+        <createTable tableName="seller_professional_profiles">
+            <column name="id" type="uuid" defaultValueComputed="gen_random_uuid()">
+                <constraints primaryKey="true" />
+            </column>
+
+            <column name="application_id" type="uuid">
+                <constraints
+                        unique="true"
+                        nullable="false"
+                        referencedTableName="seller_applications"
+                        referencedColumnNames="id"
+                        foreignKeyName="fk_seller_application_professional_profile_consisting"
+                />
+            </column>
+
+            <column name="occupation_id" type="uuid">
+                <constraints
+                        nullable="false"
+                        referencedTableName="occupations"
+                        referencedColumnNames="id"
+                        foreignKeyName="fk_seller_application_occupation"
+                />
+            </column>
+
+            <column name="years_of_experience" type="int" />
+
+            <column name="experience_level" type="varchar(30)">
+                <constraints nullable="false" />
+            </column>
+
+            <column
+                    name="created_at"
+                    type="TIMESTAMP WITH TIME ZONE"
+                    defaultValueComputed="CURRENT_TIMESTAMP"
+            >
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at"  type="TIMESTAMP WITH TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>

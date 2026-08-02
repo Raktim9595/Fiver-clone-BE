@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="create-seller-education-table" author="Raktim">
+        <createTable tableName="seller_education">
+            <column name="id" type="uuid" defaultValueComputed="gen_random_uuid()">
+                <constraints primaryKey="true" />
+            </column>
+
+            <column name="application_id" type="uuid">
+                <constraints
+                        nullable="false"
+                        referencedTableName="seller_applications"
+                        referencedColumnNames="id"
+                        foreignKeyName="fk_seller_application_respective_education"
+                />
+            </column>
+
+            <column name="institution_name" type="varchar(200)">
+                <constraints nullable="false" />
+            </column>
+
+            <column name="country" type="varchar(20)" />
+
+            <column name="degree" type="varchar(150)" />
+
+            <column name="field_of_study" type="varchar(150)" />
+
+            <column name="start_year" type="int" />
+
+            <column name="end_year" type="int" />
+
+            <column name="is_current" type="boolean">
+                <constraints nullable="false" />
+            </column>
+
+            <column
+                    name="created_at"
+                    type="TIMESTAMP WITH TIME ZONE"
+                    defaultValueComputed="CURRENT_TIMESTAMP"
+            >
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="updated_at" type="timestamp with time zone">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>

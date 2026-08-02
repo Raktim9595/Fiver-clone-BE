@@ -6,7 +6,7 @@
 
     <changeSet id="seed-languages" author="Raktim">
         <loadData
-                tableName="language"
+                tableName="languages"
                 file="db/data/languages.csv"
                 separator=","
                 relativeToChangelogFile="false"

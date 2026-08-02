@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="create-seller-profile-table" author="Raktim">
+        <createTable tableName="seller_profile">
+            <column name="id" type="uuid" defaultValueComputed="gen_random_uuid()">
+                <constraints primaryKey="true" />
+            </column>
+
+            <column name="user_id" type="uuid">
+                <constraints
+                        unique="true"
+                        nullable="true"
+                        referencedTableName="users"
+                        referencedColumnNames="id"
+                        foreignKeyName="fk_approved_seller_profile_with_user"
+                />
+            </column>
+
+            <column name="approved_application_id" type="uuid">
+                <constraints
+                        unique="true"
+                        nullable="false"
+                        referencedTableName="seller_applications"
+                        referencedColumnNames="id"
+                        foreignKeyName="fk_approved_seller_profile_application"
+                />
+            </column>
+
+            <column name="display_name" type="varchar(100)">
+                <constraints nullable="false" />
+            </column>
+
+            <column name="professional_headline" type="varchar(120)">
+                <constraints nullable="false" />
+            </column>
+
+            <column name="description" type="varchar(600)">
+                <constraints nullable="false" />
+            </column>
+
+            <column name="professional_level" type="varchar(30)">
+                <constraints nullable="false" />
+            </column>
+
+            <column name="occupation_id" type="uuid">
+                <constraints
+                        nullable="false"
+                        referencedTableName="occupations"
+                        referencedColumnNames="id"
+                        foreignKeyName="fk_approved_seller_profile_occupation"
+                />
+            </column>
+
+            <column name="account_status" type="varchar(30)">
+                <constraints nullable="false" />
+            </column>
+
+            <column name="average_rating" type="decimal(3,2)" defaultValueNumeric="0.00">
+                <constraints nullable="false" />
+            </column>
+
+            <column name="total_reviews" type="bigint" defaultValueNumeric="0" />
+
+            <column name="total_orders" type="bigint" defaultValueNumeric="0" />
+
+            <column name="completed_orders" type="bigint" defaultValueNumeric="0" />
+
+            <column
+                    name="created_at"
+                    type="TIMESTAMP WITH TIME ZONE"
+                    defaultValueComputed="CURRENT_TIMESTAMP"
+            >
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="updated_at" type="timestamp with time zone">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>
