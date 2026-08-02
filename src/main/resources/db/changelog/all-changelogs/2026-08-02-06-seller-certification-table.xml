@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="create-seller-certification-table" author="Raktim">
+        <createTable tableName="seller_certifications">
+            <column name="id" type="uuid" defaultValueComputed="gen_random_uuid()">
+                <constraints primaryKey="true" />
+            </column>
+
+            <column name="application_id" type="uuid">
+                <constraints
+                        nullable="false"
+                        referencedTableName="seller_applications"
+                        referencedColumnNames="id"
+                        foreignKeyName="fk_seller_application_respective_certification"
+                />
+            </column>
+
+            <column name="certification_name" type="varchar(200)">
+                <constraints nullable="false" />
+            </column>
+
+            <column name="issuing_organization" type="varchar(200)" />
+
+            <column name="issue_date" type="date" />
+
+            <column name="expiration_date" type="date" />
+
+            <column name="credential_id" type="varchar(150)" />
+
+            <column name="credential_url" type="varchar" />
+
+            <column
+                    name="created_at"
+                    type="TIMESTAMP WITH TIME ZONE"
+                    defaultValueComputed="CURRENT_TIMESTAMP"
+            >
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="updated_at" type="timestamp with time zone">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>

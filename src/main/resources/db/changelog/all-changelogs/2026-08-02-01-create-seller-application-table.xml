@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="create-seller-application-table" author="Raktim">
+        <createTable tableName="seller_applications">
+            <column name="id" type="uuid" defaultValueComputed="gen_random_uuid()">
+                <constraints primaryKey="true" />
+            </column>
+
+            <column name="user_id" type="uuid">
+                <constraints
+                        nullable="false"
+                        referencedTableName="users"
+                        referencedColumnNames="id"
+                        foreignKeyName="fk_seller_application_user_new"
+                />
+            </column>
+
+            <column name="status" type="varchar(30)">
+                <constraints nullable="false" />
+            </column>
+
+            <column name="current_step" type="varchar(40)">
+                <constraints nullable="false" />
+            </column>
+
+            <column name="completion_percentage" type="int" />
+
+            <column name="submitted_at" type="TIMESTAMP WITH TIME ZONE" />
+
+            <column name="review_started_at" type="TIMESTAMP WITH TIME ZONE" />
+
+            <column name="approved_at" type="TIMESTAMP WITH TIME ZONE" />
+
+            <column name="rejected_at" type="TIMESTAMP WITH TIME ZONE" />
+
+            <column
+                    name="created_at"
+                    type="TIMESTAMP WITH TIME ZONE"
+                    defaultValueComputed="CURRENT_TIMESTAMP"
+            >
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="updated_at" type="timestamp with time zone">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>
