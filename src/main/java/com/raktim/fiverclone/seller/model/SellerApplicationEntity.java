@@ -22,7 +22,7 @@ import java.util.Set;
 @Table(name = "seller_applications")
 public class SellerApplicationEntity extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "user_id", nullable = false, unique = true)
     private UserEntity user;
 
     @Builder.Default

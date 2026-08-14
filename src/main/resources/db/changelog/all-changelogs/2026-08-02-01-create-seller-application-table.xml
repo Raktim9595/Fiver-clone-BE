@@ -50,4 +50,12 @@
             </column>
         </createTable>
     </changeSet>
+
+    <changeSet id="add unique constraints on user id" author="Raktim">
+        <addUniqueConstraint
+                tableName="seller_applications"
+                columnNames="user_id"
+                constraintName="uk_seller_applications_user_id"
+        />
+    </changeSet>
 </databaseChangeLog>
