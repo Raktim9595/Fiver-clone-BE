@@ -1,8 +1,8 @@
 package com.raktim.fiverclone.seller.controller;
 
-import com.raktim.fiverclone.seller.dto.SellerDto;
-import com.raktim.fiverclone.seller.dto.SellerResponseDto;
-import com.raktim.fiverclone.seller.service.SellerService;
+import com.raktim.fiverclone.seller.dto.StartSellerApplicationRequestDto;
+import com.raktim.fiverclone.seller.model.SellerApplicationEntity;
+import com.raktim.fiverclone.seller.service.sellerApplication.SellerApplicationService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -20,15 +20,16 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @Tag(name = "Seller", description = "Sellers API")
 public class SellerController {
-    private final SellerService sellerService;
+    private final SellerApplicationService sellerApplicationService;
 
     @PostMapping("/seller")
     @SecurityRequirement(name = "bearerAuth")
-    @Operation(summary = "Create a new seller", description = "Endpoint to add a new seller from a existing user")
-    public ResponseEntity<SellerResponseDto> addSeller(
-            @Valid @RequestBody SellerDto sellerDto
-    ) {
-        SellerResponseDto result = sellerService.addSeller(sellerDto);
+    @Operation(summary = "Create a new seller", description = "Endpoint to add a new seller in the DRAFT state")
+    public ResponseEntity<SellerApplicationEntity> addSeller(
+            @Valid @RequestBody StartSellerApplicationRequestDto startSellerApplicationRequestDto
+            ) {
+        SellerApplicationEntity result = sellerApplicationService
+                .startSellerApplication(startSellerApplicationRequestDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(result);
     }
 }
