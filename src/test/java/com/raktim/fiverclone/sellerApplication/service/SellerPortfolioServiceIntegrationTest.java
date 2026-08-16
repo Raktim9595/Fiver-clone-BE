@@ -4,9 +4,10 @@ import com.raktim.fiverclone.common.IntegrationTestConfig;
 import com.raktim.fiverclone.seeder.SellerApplicationTestDataSeeder;
 import com.raktim.fiverclone.seeder.UserTestDataSeeder;
 import com.raktim.fiverclone.sellerApplication.dto.SellerPortfolioRequestDto;
+import com.raktim.fiverclone.sellerApplication.dto.SellerPortfolioResponseDto;
 import com.raktim.fiverclone.sellerApplication.enums.PortfolioLinkType;
 import com.raktim.fiverclone.sellerApplication.model.SellerApplicationEntity;
-import com.raktim.fiverclone.sellerApplication.model.SellerPortfolioEntity;
+import com.raktim.fiverclone.user.model.UserEntity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -36,7 +37,7 @@ public class SellerPortfolioServiceIntegrationTest {
 
     @BeforeEach
     public void setup() {
-        var user = userTestDataSeeder.addUser();
+        UserEntity user = userTestDataSeeder.addUser();
         application = sellerApplicationTestDataSeeder.addSellerApplication(user);
     }
 
@@ -52,13 +53,13 @@ public class SellerPortfolioServiceIntegrationTest {
                 "https://linkedin.com"
         );
 
-        var result = service.create(application.getId(), dto);
+        SellerPortfolioResponseDto result = service.create(application.getId(), dto);
 
         assertThat(result).isNotNull();
-        assertThat(result).isInstanceOf(SellerPortfolioEntity.class);
-        assertThat(result.getApplication().getId()).isEqualTo(application.getId());
-        assertThat(result.getLinkType()).isEqualTo(PortfolioLinkType.LINKEDIN);
-        assertThat(result.getTitle()).isEqualTo("My linked in profile page");
-        assertThat(result.getUrl()).isEqualTo("https://linkedin.com");
+        assertThat(result).isInstanceOf(SellerPortfolioResponseDto.class);
+        assertThat(result.applicationId()).isEqualTo(application.getId());
+        assertThat(result.linkType()).isEqualTo(PortfolioLinkType.LINKEDIN);
+        assertThat(result.title()).isEqualTo("My linked in profile page");
+        assertThat(result.url()).isEqualTo("https://linkedin.com");
     }
 }

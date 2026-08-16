@@ -1,6 +1,7 @@
 package com.raktim.fiverclone.sellerApplication.service;
 
 import com.raktim.fiverclone.sellerApplication.dto.SellerEducationRequestDto;
+import com.raktim.fiverclone.sellerApplication.dto.SellerEducationResponseDto;
 import com.raktim.fiverclone.sellerApplication.model.SellerApplicationEntity;
 import com.raktim.fiverclone.sellerApplication.model.SellerEducationEntity;
 import com.raktim.fiverclone.sellerApplication.repo.SellerEducationRepo;
@@ -21,7 +22,7 @@ public class SellerEducationService {
 
     private static final Logger log =  LoggerFactory.getLogger(SellerEducationService.class);
 
-    public SellerEducationEntity create(
+    public SellerEducationResponseDto create(
             UUID applicationId,
             SellerEducationRequestDto dto
     ) {
@@ -36,6 +37,6 @@ public class SellerEducationService {
         repo.save(newSellerEducationEntity);
         log.info("Successfully saved seller education entity");
 
-        return newSellerEducationEntity;
+        return mapper.toSellerEducationResponseDto(newSellerEducationEntity);
     }
 }
