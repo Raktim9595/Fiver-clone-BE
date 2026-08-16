@@ -1,18 +1,16 @@
 package com.raktim.fiverclone.sellerApplication.dto;
 
 import com.raktim.fiverclone.sellerApplication.enums.PortfolioLinkType;
-import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 
+import java.util.UUID;
+
 @Builder
-public record SellerPortfolioRequestDto(
-        @NotNull
+public record SellerPortfolioResponseDto(
+        UUID applicationId,
+        UUID id,
         PortfolioLinkType linkType,
-
-        @NotNull
         String title,
-
-        @NotNull
         String url
 ) {
 }

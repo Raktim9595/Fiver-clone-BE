@@ -1,28 +1,20 @@
 package com.raktim.fiverclone.sellerApplication.dto;
 
-import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 
+import java.time.Instant;
 import java.time.LocalDate;
+import java.util.UUID;
 
 @Builder
-public record SellerCertificationRequestDto(
-        @NotNull
+public record SellerCertificationResponseDto(
+        UUID id,
+        UUID applicationId,
+        Instant createdAt,
         String certificationName,
-
-        @NotNull
         String issuingOrganization,
-
-        @NotNull
         LocalDate issueDate,
-
-        @NotNull
         LocalDate expirationDate,
-
-        @NotNull
         String credentialId,
-
-        @NotNull
         String credentialUrl
-) {
-}
+) {}

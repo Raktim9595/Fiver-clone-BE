@@ -42,6 +42,21 @@ public interface SellerApplicationMapper {
             Set<LanguageEntity> languages
     );
 
+    @Mapping(target = "applicationId", source = "application.id")
+    SellerEducationResponseDto toSellerEducationResponseDto(
+            SellerEducationEntity sellerEducationEntity
+    );
+
+    @Mapping(target = "applicationId", source = "application.id")
+    SellerPortfolioResponseDto toSellerPortfolioResponseDto(
+            SellerPortfolioEntity sellerPortfolioEntity
+    );
+
+    @Mapping(target = "applicationId", source = "application.id")
+    SellerCertificationResponseDto toSellerCertificationResponseDto(
+            SellerCertificationEntity sellerCertificationEntity
+    );
+
     SellerPersonalProfileResponseDto toSellerPersonalProfileResponseDto(
             SellerPersonalProfileEntity entity
     );

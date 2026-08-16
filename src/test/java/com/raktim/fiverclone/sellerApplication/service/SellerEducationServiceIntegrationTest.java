@@ -4,8 +4,9 @@ import com.raktim.fiverclone.common.IntegrationTestConfig;
 import com.raktim.fiverclone.seeder.SellerApplicationTestDataSeeder;
 import com.raktim.fiverclone.seeder.UserTestDataSeeder;
 import com.raktim.fiverclone.sellerApplication.dto.SellerEducationRequestDto;
+import com.raktim.fiverclone.sellerApplication.dto.SellerEducationResponseDto;
 import com.raktim.fiverclone.sellerApplication.model.SellerApplicationEntity;
-import com.raktim.fiverclone.sellerApplication.model.SellerEducationEntity;
+import com.raktim.fiverclone.user.model.UserEntity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -35,7 +36,7 @@ public class SellerEducationServiceIntegrationTest {
 
     @BeforeEach
     public void setup() {
-        var user = userTestDataSeeder.addUser();
+        UserEntity user = userTestDataSeeder.addUser();
         application = sellerApplicationTestDataSeeder.addSellerApplication(user);
     }
 
@@ -55,13 +56,13 @@ public class SellerEducationServiceIntegrationTest {
                 false
         );
 
-        SellerEducationEntity result =
+        SellerEducationResponseDto result =
                 service.create(application.getId(), dto);
 
         assertThat(result).isNotNull();
-        assertThat(result).isInstanceOf(SellerEducationEntity.class);
-        assertThat(result.getApplication().getId()).isEqualTo(application.getId());
-        assertThat(result.getCurrent()).isFalse();
-        assertThat(result.getDegree()).isEqualTo("Bachelors in Computer Engineering");
+        assertThat(result).isInstanceOf(SellerEducationResponseDto.class);
+        assertThat(result.applicationId()).isEqualTo(application.getId());
+        assertThat(result.current()).isFalse();
+        assertThat(result.degree()).isEqualTo("Bachelors in Computer Engineering");
     }
 }

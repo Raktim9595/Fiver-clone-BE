@@ -1,11 +1,12 @@
 package com.raktim.fiverclone.sellerApplication.service;
 
 import com.raktim.fiverclone.common.IntegrationTestConfig;
+import com.raktim.fiverclone.mocks.SellerApplicationTestData;
 import com.raktim.fiverclone.seeder.SellerApplicationTestDataSeeder;
 import com.raktim.fiverclone.seeder.UserTestDataSeeder;
 import com.raktim.fiverclone.sellerApplication.dto.SellerCertificationRequestDto;
+import com.raktim.fiverclone.sellerApplication.dto.SellerCertificationResponseDto;
 import com.raktim.fiverclone.sellerApplication.model.SellerApplicationEntity;
-import com.raktim.fiverclone.sellerApplication.model.SellerCertificationEntity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -47,21 +48,14 @@ public class SellerCertificationServiceIntegrationTest {
             Then it should create the new certification entity and return
             """)
     public void shouldCreateSellerCertification() {
-        SellerCertificationRequestDto dto = new SellerCertificationRequestDto(
-                "AWS cloud hero",
-                "Amazon Web Services",
-                LocalDate.now(),
-                LocalDate.now(),
-                "aws-id",
-                "https://credentials"
-        );
+        SellerCertificationRequestDto dto = SellerApplicationTestData.validSellerCertificationRequestDto().build();
 
-        SellerCertificationEntity result =
+        SellerCertificationResponseDto result =
                 service.create(application.getId(), dto);
 
         assertThat(result).isNotNull();
-        assertThat(result).isInstanceOf(SellerCertificationEntity.class);
-        assertThat(result.getApplication().getId()).isEqualTo(application.getId());
-        assertThat(result.getCertificationName()).isEqualTo("AWS cloud hero");
+        assertThat(result).isInstanceOf(SellerCertificationResponseDto.class);
+        assertThat(result.applicationId()).isEqualTo(application.getId());
+        assertThat(result.certificationName()).isEqualTo("AWS cloud hero");
     }
 }

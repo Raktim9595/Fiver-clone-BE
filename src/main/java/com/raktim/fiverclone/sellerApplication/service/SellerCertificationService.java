@@ -1,6 +1,7 @@
 package com.raktim.fiverclone.sellerApplication.service;
 
 import com.raktim.fiverclone.sellerApplication.dto.SellerCertificationRequestDto;
+import com.raktim.fiverclone.sellerApplication.dto.SellerCertificationResponseDto;
 import com.raktim.fiverclone.sellerApplication.model.SellerApplicationEntity;
 import com.raktim.fiverclone.sellerApplication.model.SellerCertificationEntity;
 import com.raktim.fiverclone.sellerApplication.repo.SellerCertificationRepo;
@@ -21,7 +22,7 @@ public class SellerCertificationService {
 
     private static final Logger log =  LoggerFactory.getLogger(SellerCertificationService.class);
 
-    public SellerCertificationEntity create(UUID applicationId, SellerCertificationRequestDto dto) {
+    public SellerCertificationResponseDto create(UUID applicationId, SellerCertificationRequestDto dto) {
         log.info("Creating Seller Certification {} with applicationId {}", dto, applicationId);
 
         SellerApplicationEntity application = sellerApplicationService.findByIdOrThrow(applicationId);
@@ -33,6 +34,6 @@ public class SellerCertificationService {
 
         log.info("Created Seller Certification {} with applicationId {}", dto, applicationId);
 
-        return result;
+        return mapper.toSellerCertificationResponseDto(result);
     }
 }
