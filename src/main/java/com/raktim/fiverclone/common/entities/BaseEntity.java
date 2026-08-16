@@ -1,8 +1,8 @@
 package com.raktim.fiverclone.common.entities;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.UuidGenerator;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -15,6 +15,9 @@ import java.util.UUID;
 @Setter
 @MappedSuperclass
 @EntityListeners({AuditingEntityListener.class})
+@SuperBuilder
+@NoArgsConstructor
+@AllArgsConstructor
 public abstract class BaseEntity {
     @Id
     @Column(nullable = false, updatable = false, unique = true)

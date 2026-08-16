@@ -1,6 +1,6 @@
 package com.raktim.fiverclone.mocks;
 
-import com.raktim.fiverclone.seller.dto.SellerDto;
+import com.raktim.fiverclone.sellerApplication.dto.SellerDto;
 
 import java.util.Set;
 import java.util.UUID;

@@ -43,4 +43,23 @@
             </column>
         </createTable>
     </changeSet>
+
+    <changeSet id="add-updated-at-to-seller-application-status-history" author="Raktim">
+        <!-- Add default value to existing created_at column -->
+        <addDefaultValue
+                tableName="seller_application_status_history"
+                columnName="created_at"
+                columnDataType="TIMESTAMP WITH TIME ZONE"
+                defaultValueComputed="CURRENT_TIMESTAMP"
+        />
+
+        <!-- Add updated_at column -->
+        <addColumn tableName="seller_application_status_history">
+            <column
+                    name="updated_at"
+                    type="TIMESTAMP WITH TIME ZONE"
+            />
+        </addColumn>
+
+    </changeSet>
 </databaseChangeLog>
