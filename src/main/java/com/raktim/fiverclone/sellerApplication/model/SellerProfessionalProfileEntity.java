@@ -27,4 +27,8 @@ public class SellerProfessionalProfileEntity extends BaseEntity {
     @Enumerated(EnumType.STRING)
     @Column(name = "experience_level", nullable = false, length = 30)
     private ExperienceLevel professionalLevel;
+
+    @Builder.Default
+    @Column(name = "is_active", nullable = false)
+    private Boolean active = true;
 }
