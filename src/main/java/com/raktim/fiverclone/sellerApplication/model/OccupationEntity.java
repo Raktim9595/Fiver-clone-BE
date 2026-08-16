@@ -24,8 +24,4 @@ public class OccupationEntity {
 
     @Column(nullable = false, unique = true, length = 50)
     private String name;
-
-    @Builder.Default
-    @Column(name = "is_active", nullable = false)
-    private Boolean active = true;
 }
