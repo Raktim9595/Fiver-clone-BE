@@ -1,8 +1,12 @@
 package com.raktim.fiverclone.sellerApplication.model;
 
 import com.raktim.fiverclone.common.entities.BaseEntity;
+import com.raktim.fiverclone.language.model.LanguageEntity;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Builder(toBuilder = true)
@@ -17,7 +21,7 @@ public class SellerPersonalProfileEntity extends BaseEntity {
     private SellerApplicationEntity application;
 
     @Column(name = "display_name", nullable = false, length = 100)
-    private String displayName; // make it same name as username in the begining
+    private String displayName; // make it same name as username in the beginning
 
     @Column(
             name = "professional_headline",
@@ -34,4 +38,13 @@ public class SellerPersonalProfileEntity extends BaseEntity {
 
     @Column(name = "phone_number", length = 30)
     private String phoneNumber;
+
+    @Builder.Default
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "seller_application_languages",
+            joinColumns = @JoinColumn(name = "seller_personal_profile_id"),
+            inverseJoinColumns = @JoinColumn(name = "language_id")
+    )
+    private Set<LanguageEntity> languages = new HashSet<>();
 }

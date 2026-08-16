@@ -6,7 +6,7 @@
 
     <changeSet id="create-seller-application-languages-join-table" author="Raktim">
         <createTable tableName="seller_application_languages">
-            <column name="application_id" type="uuid">
+            <column name="seller_personal_profile_id" type="uuid">
                 <constraints nullable="false" />
             </column>
             
@@ -17,14 +17,14 @@
         
         <addPrimaryKey
                 tableName="seller_application_languages"
-                columnNames="application_id, language_id"
+                columnNames="seller_personal_profile_id, language_id"
                 constraintName="pk_seller_application_languages"
         />
         <addForeignKeyConstraint
                 constraintName="fk_seller_application_languages_application"
                 baseTableName="seller_application_languages"
-                baseColumnNames="application_id"
-                referencedTableName="seller_applications"
+                baseColumnNames="seller_personal_profile_id"
+                referencedTableName="seller_personal_profiles"
                 referencedColumnNames="id"
                 onDelete="CASCADE"/>
 
