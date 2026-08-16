@@ -1,12 +1,12 @@
 package com.raktim.fiverclone.sellerApplication.service;
 
-import com.raktim.fiverclone.sellerApplication.dto.SellerApplicationHistoryResponseDto;
-import com.raktim.fiverclone.sellerApplication.dto.SellerCertificationRequestDto;
-import com.raktim.fiverclone.sellerApplication.dto.SellerEducationRequestDto;
-import com.raktim.fiverclone.sellerApplication.dto.SellerPortfolioRequestDto;
+import com.raktim.fiverclone.language.model.LanguageEntity;
+import com.raktim.fiverclone.sellerApplication.dto.*;
 import com.raktim.fiverclone.sellerApplication.model.*;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+
+import java.util.Set;
 
 @Mapper(componentModel = "spring")
 public interface SellerApplicationMapper {
@@ -33,4 +33,20 @@ public interface SellerApplicationMapper {
             SellerCertificationRequestDto dto,
             SellerApplicationEntity applicationEntity
     );
+
+    @Mapping(target = "application", source = "applicationEntity")
+    @Mapping(target = "languages", source = "languages")
+    SellerPersonalProfileEntity toSellerPersonalProfileEntity(
+            SellerPersonalProfileRequestDto dto,
+            SellerApplicationEntity applicationEntity,
+            Set<LanguageEntity> languages
+    );
+
+    SellerPersonalProfileResponseDto toSellerPersonalProfileResponseDto(
+            SellerPersonalProfileEntity entity
+    );
+
+    default String mapLanguageToName(LanguageEntity language) {
+        return language.getLanguage();
+    }
 }

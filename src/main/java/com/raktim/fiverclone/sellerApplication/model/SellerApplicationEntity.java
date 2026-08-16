@@ -1,7 +1,6 @@
 package com.raktim.fiverclone.sellerApplication.model;
 
 import com.raktim.fiverclone.common.entities.BaseEntity;
-import com.raktim.fiverclone.language.model.LanguageEntity;
 import com.raktim.fiverclone.seeds.skills.SkillEntity;
 import com.raktim.fiverclone.sellerApplication.enums.SellerApplicationStatus;
 import com.raktim.fiverclone.sellerApplication.enums.SellerOnboardingSteps;
@@ -82,14 +81,6 @@ public class SellerApplicationEntity extends BaseEntity {
     )
     private Set<SellerPortfolioEntity> portfolios = new HashSet<>();
 
-    @Builder.Default
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(
-            name = "seller_application_languages",
-            joinColumns = @JoinColumn(name = "application_id"),
-            inverseJoinColumns = @JoinColumn(name = "language_id")
-    )
-    private Set<LanguageEntity> languages = new HashSet<>();
 
     @Builder.Default
     @ManyToMany(fetch = FetchType.LAZY)

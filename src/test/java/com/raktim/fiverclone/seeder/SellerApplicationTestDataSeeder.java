@@ -1,7 +1,5 @@
 package com.raktim.fiverclone.seeder;
 
-import com.raktim.fiverclone.language.model.LanguageEntity;
-import com.raktim.fiverclone.language.repo.LanguageRepo;
 import com.raktim.fiverclone.seeds.skills.SkillEntity;
 import com.raktim.fiverclone.seeds.skills.SkillsRepo;
 import com.raktim.fiverclone.sellerApplication.enums.SellerApplicationStatus;
@@ -16,24 +14,22 @@ import org.springframework.boot.test.context.TestComponent;
 import java.time.Instant;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 @TestComponent
 @RequiredArgsConstructor
 public class SellerApplicationTestDataSeeder {
     private final SellerApplicationRepo sellerApplicationRepo;
     private final SellerApplicationStatusHistoryRepo sellerApplicationStatusHistoryRepo;
-    private final LanguageRepo languageRepo;
     private final SkillsRepo skillsRepo;
 
     public SellerApplicationEntity addSellerApplication(UserEntity user) {
-        List<LanguageEntity> languages = languageRepo.findAll();
         List<SkillEntity> skills = skillsRepo.findAll();
 
         SellerApplicationEntity entity =
                 SellerApplicationEntity
                         .builder()
                         .user(user)
-                        .languages(Set.of(languages.getFirst(), languages.getLast()))
                         .skills(Set.of(skills.getFirst(), skills.getLast()))
                         .submittedAt(Instant.now())
                         .build();
@@ -59,9 +55,8 @@ public class SellerApplicationTestDataSeeder {
         return sellerApplicationStatusHistoryRepo.save(entity);
     }
 
-    public void deleteAll() {
-        sellerApplicationRepo.deleteAll();
-        sellerApplicationStatusHistoryRepo.deleteAll();
+    public SellerApplicationEntity getApplication(UUID id) {
+        return sellerApplicationRepo.findById(id).orElse(null);
     }
 }
 

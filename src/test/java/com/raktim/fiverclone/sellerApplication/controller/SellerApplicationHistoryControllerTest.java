@@ -43,7 +43,7 @@ public class SellerApplicationHistoryControllerTest {
 
     @Test
     @DisplayName("When called POST on /api/seller-application/id/status-history, And no issues Then it should call proper method")
-    public void testAddSeller() throws Exception  {
+    public void shouldInvokeCorrectMethods() throws Exception  {
         UUID applicationId = UUID.randomUUID();
         UUID userId = UUID.randomUUID();
 
