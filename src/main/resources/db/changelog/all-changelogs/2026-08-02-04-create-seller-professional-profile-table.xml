@@ -30,6 +30,7 @@
             </column>
 
             <column name="years_of_experience" type="int" />
+            <column name="is_active" type="boolean" defaultValue="false" />
 
             <column name="experience_level" type="varchar(30)">
                 <constraints nullable="false" />

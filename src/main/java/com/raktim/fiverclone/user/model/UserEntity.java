@@ -37,6 +37,7 @@ public class UserEntity extends BaseEntity {
     private String language;
     private LocalDate dateOfBirth;
 
+    @Builder.Default
     @Enumerated(EnumType.STRING)
     @Column(
             nullable = false,
@@ -44,6 +45,7 @@ public class UserEntity extends BaseEntity {
     )
     private UserStatus status =  UserStatus.ACTIVE;
 
+    @Builder.Default
     @Enumerated(EnumType.STRING)
     @Column(
             nullable = false,
@@ -51,6 +53,7 @@ public class UserEntity extends BaseEntity {
     )
     private UserRole role = UserRole.BUYER;
 
+    @Builder.Default
     @OneToMany(mappedBy = "user")
     private List<UserFileEntity> files = new ArrayList<>();
 }

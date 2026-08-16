@@ -9,7 +9,7 @@ import lombok.*;
 
 @Entity
 @Table(name = "user_files")
-@Builder(toBuilder = true)
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
@@ -29,6 +29,7 @@ public class UserFileEntity extends BaseEntity {
     )
     private FileType type;
 
+    @Builder.Default
     @Enumerated(EnumType.STRING)
     @Column(
             nullable = false,

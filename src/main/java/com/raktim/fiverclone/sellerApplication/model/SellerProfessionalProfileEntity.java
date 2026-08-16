@@ -14,7 +14,7 @@ import lombok.*;
 @Table(name = "seller_professional_profiles")
 public class SellerProfessionalProfileEntity extends BaseEntity {
     @OneToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "application_id")
+    @JoinColumn(name = "application_id", unique = true)
     private SellerApplicationEntity application;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)

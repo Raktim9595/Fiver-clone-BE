@@ -18,9 +18,6 @@ public class OccupationServiceIntegrationTest {
     @Autowired
     private OccupationService occupationService;
 
-    @Autowired
-    private OccupationRepo occupationRepo;
-
     @Test
     @DisplayName("""
             Given createOccupation when called,
