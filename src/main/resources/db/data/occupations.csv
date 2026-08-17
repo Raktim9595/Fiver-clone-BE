@@ -1,0 +1,203 @@
+id,name,category
+14b8746f-6363-44be-8780-ac95e62dd126,Software Developer,Programming & Technology
+af47ce4a-2ff9-4284-bfcc-45cba65f5bbd,Web Developer,Programming & Technology
+2317de94-5fd5-4121-a30c-2de4e0abb1ba,Frontend Developer,Programming & Technology
+01603c9c-221a-49f1-a78c-a8955b43130c,Backend Developer,Programming & Technology
+31826057-e4bc-43de-9be5-baa782860cb6,Full Stack Developer,Programming & Technology
+f14b8574-6f5d-4e59-84b7-5dd5331b6b1f,Mobile App Developer,Programming & Technology
+1ff90653-ab00-4a7c-a208-69baa0d59e96,iOS Developer,Programming & Technology
+5eb1c135-de48-492e-90bd-1c9cf321a3ed,Android Developer,Programming & Technology
+4fc9fa14-ebd7-48d3-9346-6df6ccbd18be,WordPress Developer,Programming & Technology
+8a3d2dc2-5a07-4f80-a15e-f54ed70caf19,Shopify Developer,Programming & Technology
+03eb9472-2f28-4b1a-a40f-c2447793faee,E-commerce Developer,Programming & Technology
+495f2506-d6c1-402d-8fea-1279ef4c03fb,Game Developer,Programming & Technology
+89c0d05f-6137-466e-8f5e-ae4a835d62b3,Desktop Application Developer,Programming & Technology
+eaec867b-eba1-418a-a1f5-cddb1dcb17a6,DevOps Engineer,Programming & Technology
+1f4aabf0-55b7-4038-af78-37ee4e55c6aa,Cloud Engineer,Programming & Technology
+5a0f061d-7073-42a6-b203-ae60ab74b925,Software Engineer,Programming & Technology
+accb7477-71d2-49a4-86c9-02f873e6e895,QA Engineer,Programming & Technology
+1e915c6d-b83a-4f78-aae5-8bf16628cedc,Software Tester,Programming & Technology
+61d707bb-10c6-4662-951c-2a99a7f9a4b7,Cybersecurity Specialist,Programming & Technology
+96219271-983d-4bd8-85ed-0b6b3c72dfb0,Blockchain Developer,Programming & Technology
+719d03b2-193f-4b2e-9503-e6ab1f233c7a,Database Developer,Programming & Technology
+e317ef69-74c9-4e75-b423-d918cd6ddb24,Database Administrator,Programming & Technology
+b0a314f8-d805-49f2-bf3e-b0b8c39768f8,API Developer,Programming & Technology
+ad4ea01c-cf3d-4c95-bead-0e167da9d7e6,Automation Developer,Programming & Technology
+db4a2575-b330-499b-b6c7-4cc4c9d65f42,Solutions Architect,Programming & Technology
+0c8ecf2c-ef4d-4ea8-a421-7dd158bc613f,Technical Support Specialist,Programming & Technology
+a4d30ba6-2a65-4985-8e66-ed28066c3fc4,AI Developer,AI & Machine Learning
+47e345d6-02cc-41aa-935b-281e41110256,AI Engineer,AI & Machine Learning
+59203386-4a30-4187-a58a-23facfdcc6c5,Machine Learning Engineer,AI & Machine Learning
+3c926f16-38ba-471b-8fc2-b5a228638156,Generative AI Developer,AI & Machine Learning
+f41566c0-f28d-4872-bfa3-8c602df01d3a,Chatbot Developer,AI & Machine Learning
+9eeac01d-e118-4649-b4f5-445c6f0cb05f,AI Agent Developer,AI & Machine Learning
+d24eeb08-3bd2-4b36-9ddc-9edb55776fe8,NLP Engineer,AI & Machine Learning
+1ad5036d-dccf-4955-bbbe-a5571670ddbd,Computer Vision Engineer,AI & Machine Learning
+93e1b724-88c5-40ee-8972-de4bc66761d9,Prompt Engineer,AI & Machine Learning
+106d5887-23fb-4730-8bfa-b9e84f5735dd,AI Consultant,AI & Machine Learning
+1b2fedae-c639-49c2-ade7-2f846c1cfe74,AI Content Specialist,AI & Machine Learning
+67e8908e-0615-4324-bf8a-9a2bb2ab45a1,AI Automation Specialist,AI & Machine Learning
+f8487e90-b6b8-4767-9e99-68bc1cc6b8c2,Graphic Designer,Graphics & Design
+14e3371c-bb25-4b4c-a5fd-13a1769a9bf3,Logo Designer,Graphics & Design
+cbc55b1d-b7c8-4ae8-9d08-7efe0af3ec2d,Brand Designer,Graphics & Design
+427ae83c-e3be-4791-99c3-7730084a7596,UI Designer,Graphics & Design
+675eed05-d1f1-45c3-847f-c8484a7dca15,UX Designer,Graphics & Design
+b2eaee60-76ef-459f-9810-c85a9f03e377,UI/UX Designer,Graphics & Design
+321b2635-1113-44a1-9d3f-15b30a7bec65,Web Designer,Graphics & Design
+5f889317-ca98-43cb-9b02-e55ef42dcf3d,App Designer,Graphics & Design
+64c02816-5595-46a8-8ba1-64a52bfc3fae,Product Designer,Graphics & Design
+94316e1c-acec-47d3-82f9-0a7aebfbe05a,Illustrator,Graphics & Design
+fe5f234a-50c6-4f53-8d6d-b7ddc08cf5a5,Digital Artist,Graphics & Design
+584317a6-6d6d-492f-9b5b-ec96b519e756,Concept Artist,Graphics & Design
+b64c2e77-4b04-4acf-b03e-20b38d605625,Character Designer,Graphics & Design
+69afe967-8eca-468f-b72b-b7ce306d9369,Packaging Designer,Graphics & Design
+2bdb15c1-5ab9-4ffa-bb35-0d54d6fc5978,Presentation Designer,Graphics & Design
+5dfedb75-06e5-4441-9a4c-958adb82c3ca,Infographic Designer,Graphics & Design
+04bc9c78-a269-45af-b6ea-95bc44256daa,Social Media Designer,Graphics & Design
+ab14ddca-f709-4795-9bad-4a9bbb99d868,Print Designer,Graphics & Design
+8c8e83a9-59b2-4c1c-9800-6258f2062a1d,Fashion Designer,Graphics & Design
+3e845a8b-9068-4277-87cf-82e097c0501d,Industrial Designer,Graphics & Design
+e735b7dc-8539-4b17-ac31-c5ed89a42512,3D Designer,Graphics & Design
+b6d926c7-dd86-487b-ae1e-4bdce37f1692,3D Artist,Graphics & Design
+79edaf2a-48ae-4a6a-ac2c-724ddc5ebd0c,3D Modeler,Graphics & Design
+df418781-eff2-4192-a873-4836fd5af1d9,NFT Artist,Graphics & Design
+1554823a-81a1-4d4b-9384-cb0671a61c4e,Digital Marketer,Digital Marketing
+30be54e9-631c-4fde-839c-6a274b510aa3,SEO Specialist,Digital Marketing
+28cc65b9-d1eb-4ba0-9e21-da85f10d61da,SEM Specialist,Digital Marketing
+b03e6dbd-8e79-4173-960c-50dd948784bd,Social Media Manager,Digital Marketing
+58d93692-761d-47a9-9889-231943312e03,Social Media Marketer,Digital Marketing
+9fc0e8fb-cfd8-4147-9333-71d24a78ed8e,Content Marketer,Digital Marketing
+997395cc-6779-41e4-8c3a-df19a4b0ceaf,Email Marketing Specialist,Digital Marketing
+7e532c6c-92a1-44fb-a187-68c6551ccedc,Affiliate Marketing Specialist,Digital Marketing
+7a625900-083d-41bc-9933-f05806dbdaaf,Influencer Marketing Specialist,Digital Marketing
+85873a33-a088-4fcd-a355-d92439d4e425,Marketing Strategist,Digital Marketing
+57a0dfe4-e941-4c8a-9574-0b6b0553e0b1,PPC Specialist,Digital Marketing
+41a999fb-2a53-4910-8fdf-4bcd0bfc4142,Google Ads Specialist,Digital Marketing
+112c813e-ff7d-4202-abd4-e86355f8d0ab,Facebook Ads Specialist,Digital Marketing
+d7c67619-4cca-4ca7-83fc-e8fbe3fd0793,Marketing Automation Specialist,Digital Marketing
+9ca8bbd7-67eb-4f91-8d20-f09708c6f2e0,Conversion Rate Optimization Specialist,Digital Marketing
+5f022185-40aa-4ac7-979b-2881eaabcf9c,E-commerce Marketing Specialist,Digital Marketing
+2bad4bfa-73e9-4327-850b-b6f0501a0702,Community Manager,Digital Marketing
+54529645-1100-4b7c-8ea3-e142f5d3cfaf,Lead Generation Specialist,Digital Marketing
+63b0f28d-fd8e-4787-87f0-de918430b6da,Content Writer,Writing & Translation
+98080434-f9cd-40ed-a7a3-cb495b68b8ca,Copywriter,Writing & Translation
+6d62dab1-8576-4500-b389-4fe5c7873e95,Technical Writer,Writing & Translation
+e4d7c9db-d80b-4959-a811-0c29e5be328f,Blog Writer,Writing & Translation
+1d176dad-ac64-41a0-b06f-dfbf75f0447d,Article Writer,Writing & Translation
+45af2f9b-cf8e-47a1-ad31-1a8c74c73e43,SEO Writer,Writing & Translation
+cee05556-dbab-4241-97ce-9fbc71e08524,Creative Writer,Writing & Translation
+18feb1fe-6db1-4afa-aff8-a828a5bdc66d,Ghostwriter,Writing & Translation
+f3ddaaaa-0ffc-4441-9ca0-a51c17f83d37,Scriptwriter,Writing & Translation
+9b495f3a-2ad0-40db-b477-54a811c9503b,Resume Writer,Writing & Translation
+321d1071-2bb5-4432-9fbe-f0c7937afd86,Business Writer,Writing & Translation
+437c0a4f-20c1-4ae1-9910-d4c69a81bf4f,Grant Writer,Writing & Translation
+33540a0e-cdd2-48d3-a6de-3438e5487338,UX Writer,Writing & Translation
+f7645109-9f0d-4258-a57a-adbad08b0930,Product Description Writer,Writing & Translation
+b5b67b0d-f7a0-40fb-b473-0e23ae9d91e6,Proofreader,Writing & Translation
+879fe672-f4b6-413c-a623-223d56b59ad3,Editor,Writing & Translation
+9ba3bfbf-0aeb-4a7b-a437-6239896ba218,Translator,Writing & Translation
+c505771e-fb11-466e-8405-382d2709b4ec,Localization Specialist,Writing & Translation
+ce22b4f2-ea4c-4188-8301-7e7e5fbe90c0,Transcriptionist,Writing & Translation
+059e0a6f-094b-4264-917e-b52a1b774c84,Video Editor,Video & Animation
+e981765f-d7af-44d8-814c-e9e064f5434d,Video Producer,Video & Animation
+7c005e0e-b37c-42ec-af6a-02146f88217a,Videographer,Video & Animation
+12358f5a-cea5-4a62-9732-b8620e6f2ae3,Animator,Video & Animation
+e824a170-f7fc-4268-be0a-d63c5f033538,2D Animator,Video & Animation
+b4121656-5c32-47d6-b926-03e2f383c8e5,3D Animator,Video & Animation
+1912cc09-87b9-4c62-83e2-0c3b54aecb7f,Motion Graphics Designer,Video & Animation
+1ec8b1a1-44c0-47a8-893b-7c854ddc3c5a,VFX Artist,Video & Animation
+e9f81254-6879-4e3e-aa4e-4b7731819615,YouTube Video Editor,Video & Animation
+71689e9e-a86e-4e63-98f8-f38f0d673553,Short Form Video Editor,Video & Animation
+10422796-6e4f-4dce-819d-00c3a0e943c7,Explainer Video Producer,Video & Animation
+ac6b4946-509d-40bf-a76e-55b0a816172a,Intro & Outro Designer,Video & Animation
+9abf709e-5ca2-4ab5-a867-f83d2f92ba67,Character Animator,Video & Animation
+e89a98b2-7689-40cc-9eeb-512c2f8b9246,Video Ads Specialist,Video & Animation
+5a4d8b67-a9cd-4599-8d7a-066bc1b85d46,Music Producer,Music & Audio
+59197e28-5dad-4991-9c46-9db57785a93e,Audio Engineer,Music & Audio
+32c9c2c5-1c09-4f24-8229-8ef39c7f7899,Sound Designer,Music & Audio
+b712df69-96d1-447f-ab0f-cf859c6af3fc,Mixing Engineer,Music & Audio
+c2b89673-b821-49ee-9e29-8e2d65676c16,Mastering Engineer,Music & Audio
+4b623977-5a29-49e4-b76e-081ecb15696b,Singer,Music & Audio
+d5071f5c-abf3-421c-b4e3-720f33a28c04,Songwriter,Music & Audio
+10815b13-d7a9-4f36-b3ba-98ed3ba02ce2,Composer,Music & Audio
+54ead144-6d8e-45c2-8928-7b688ecfc8fd,Voice Over Artist,Music & Audio
+f4a93fd5-0042-4735-950a-69630edd4c3c,Podcast Editor,Music & Audio
+9123a998-fca4-427a-b530-4a5b27fbc39f,Audiobook Narrator,Music & Audio
+7f61431a-8e74-4c60-a41e-3d17b9c7253e,Session Musician,Music & Audio
+c1928c4d-b01b-46d0-b2ba-30dda09c2f6d,DJ,Music & Audio
+fd241962-4352-43b9-8238-aa45f650d4ae,Beat Producer,Music & Audio
+be76bf7f-b3ec-4726-9465-b52215381816,Data Analyst,Data
+8a37d8ac-5f22-44fb-83cc-950c68e5a74a,Data Scientist,Data
+0e5fb131-c69e-42c9-ad65-3c8de133bcdf,Data Engineer,Data
+f136bdb4-83ad-4d8c-9324-2ceef5626aad,Business Intelligence Analyst,Data
+b77bdadd-31f0-4841-9a44-e4210ebe90bf,Data Visualization Specialist,Data
+da0ce6ef-79f8-448b-8dd7-b9b310633375,Database Specialist,Data
+63c97973-7cda-4ec6-9b5e-1d0cc30c1a1d,Data Entry Specialist,Data
+55a299ea-8a79-45a9-96c8-53c6c733e04f,Data Processing Specialist,Data
+916c043f-7ab4-4006-b765-b3eb9f331bce,Web Scraping Specialist,Data
+b3dd5525-f38e-4774-bb59-b1902f306961,Data Mining Specialist,Data
+0b8b54f7-12fb-411b-ad3c-d89bdcd6f8fb,Analytics Consultant,Data
+33cacf6e-5047-422c-be23-505c9dde676c,Business Consultant,Business
+b96633a5-0220-4bba-989a-172abcb9ee04,Business Analyst,Business
+9315704a-b7a1-4a62-9ec6-d27dd6f53a5e,Business Strategist,Business
+e5ac4aa9-6b51-42b7-a1bc-44c2d9ae03c2,Project Manager,Business
+b470e0c2-9848-4174-a1e2-d4aa005cacf9,Product Manager,Business
+80e13a9b-3570-4c83-9d92-000ebcbc0f3e,Operations Manager,Business
+43cd0474-34d9-46a2-aba5-7add35de697b,Virtual Assistant,Business
+0460e46c-dbe2-43a3-88c3-445492a75a6b,Executive Assistant,Business
+39c7125a-84cb-4072-a566-8ff14e66f02f,Customer Support Specialist,Business
+b9e15bed-bc57-4c81-bb32-b2b7b13690de,HR Consultant,Business
+64b0f6b2-538d-4afe-9aaf-cf52cab66790,Recruiter,Business
+a8853217-71f3-41e6-914f-99ead4d01c44,Market Researcher,Business
+cd1ec26f-ecc2-431b-9aa2-5c882347891e,Sales Consultant,Business
+6fb5af2f-5210-4aa1-b256-a86166427833,Sales Representative,Business
+1ca683ea-5a7c-49bb-a87f-5ae975011334,CRM Specialist,Business
+0fd66d67-a3d9-4c0f-b240-40b217ee5c41,Supply Chain Consultant,Business
+18c53625-19d7-4552-8332-b4cd40934402,E-commerce Manager,Business
+4f10dc97-9d22-4e3f-8218-cd7299191d6a,Accountant,Finance
+e934f463-ee41-41a7-8de3-b58a3cf222b8,Bookkeeper,Finance
+e434d37f-756e-4a7d-936a-ce0dc04e0686,Financial Analyst,Finance
+953de408-db53-4914-a2cd-104ec01ec691,Financial Consultant,Finance
+830b6413-8db4-43ee-9f6c-e6f869d78815,Financial Modeler,Finance
+9faa5e44-92c6-4e71-a9c0-69c801c77fdc,Tax Consultant,Finance
+ebe4dd0e-ece6-4887-b8ab-c91ce8bc2c36,Budget Analyst,Finance
+a1e4b8e2-0513-4532-bdf3-a23be20cfd28,Investment Analyst,Finance
+55d0f281-c355-4a8f-af0a-68e1c1fcc44e,Payroll Specialist,Finance
+a441d3f3-a118-4431-aa03-c9dc62181670,Photographer,Photography
+b1f6bc68-7be0-43b8-b3eb-4fc64785ea05,Product Photographer,Photography
+abcf005c-e1df-4af0-aae6-64b4fbda8d8b,Portrait Photographer,Photography
+4f2b58a2-0623-4cba-ba57-bc07c9068717,Real Estate Photographer,Photography
+b11d7e7d-802f-49b4-bf92-bb5cf91bd718,Photo Editor,Photography
+dac5b814-7027-47b9-a71d-0ce9dc8ba98f,Photo Retoucher,Photography
+192ce285-344d-4a3f-8141-da975c577aba,Image Restoration Specialist,Photography
+6bcd2283-e8ee-4308-b77c-10973bff034f,Architect,Architecture & Engineering
+e9b20de6-8946-4659-96f3-7386e6036d2c,Interior Designer,Architecture & Engineering
+52183bcb-7758-4f8e-8b3a-f13bd366aeda,Landscape Designer,Architecture & Engineering
+cc6ab115-1d13-46e6-9801-58e27b6bc5f7,CAD Designer,Architecture & Engineering
+686d5b32-5ca2-417f-8fcb-8b7e8d01a743,CAD Drafter,Architecture & Engineering
+d6350444-5a62-4a84-a9ab-0681c6832c09,3D Architectural Visualizer,Architecture & Engineering
+5834ac87-7f2a-41b8-bd8c-595c4d4940fe,Civil Engineer,Architecture & Engineering
+ac9a0db0-b45f-4a49-85ce-199428dd13f3,Mechanical Engineer,Architecture & Engineering
+1e92ea64-e25b-4a1a-93ab-fec0615b88dd,Electrical Engineer,Architecture & Engineering
+087682f7-b041-4294-8236-c8cdc21b7181,Electronics Engineer,Architecture & Engineering
+fcfca10d-ff88-4585-a669-200396592d10,Product Engineer,Architecture & Engineering
+60aaf2f8-249a-451e-9bd5-c32860d2ad5c,Technology Consultant,Consulting
+6d944d69-8cae-4a01-826a-33230fae57f7,IT Consultant,Consulting
+f54b33c8-828f-42cc-abb1-b3658a6dfc1c,Software Consultant,Consulting
+26f9a953-e4f4-48e9-a31b-a6af523af4f9,Marketing Consultant,Consulting
+ce7b6759-4a00-4772-a59b-e0e34bb2f750,Management Consultant,Consulting
+a9294c8d-17ea-4a8a-b067-d225cdbae80f,Strategy Consultant,Consulting
+9577aaff-9b47-4c5b-ac24-6364658dab4c,Startup Consultant,Consulting
+839aa6b7-069c-498b-9dbd-19a4e9a3a449,E-commerce Consultant,Consulting
+090f7098-2a48-4293-8f09-5def9df93695,Career Consultant,Consulting
+7d8a1f6f-9b48-43db-a11e-b900ed27f2d6,Education Consultant,Consulting
+61ddc0f8-071a-43c1-b24f-bbb892f3b36e,Online Tutor,Lifestyle & Other
+bbca96f0-ea98-48db-a261-ad2bf15c6437,Language Tutor,Lifestyle & Other
+2591e74a-1ed6-45b6-833e-e3fe7ceef197,Career Coach,Lifestyle & Other
+3979637d-8d99-4779-8007-c2ecd7f0ec00,Life Coach,Lifestyle & Other
+dea919e2-2631-49ae-80c4-e4b1c7ba1b32,Fitness Coach,Lifestyle & Other
+fcf4d860-badc-47df-8b54-6c27fbdca226,Nutrition Consultant,Lifestyle & Other
+0d4fce3e-df51-4add-a7e2-cff73e14fb3e,Travel Planner,Lifestyle & Other
+9e58aa28-1087-48b9-93a9-c6f0998a9d16,Gaming Coach,Lifestyle & Other
+b621610b-e938-4ce6-900b-d78e3fdb69df,Personal Stylist,Lifestyle & Other
+f42b5925-404f-4156-84ef-e45b7d528f40,Event Planner,Lifestyle & Other

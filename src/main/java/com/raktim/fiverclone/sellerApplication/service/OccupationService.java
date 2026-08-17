@@ -7,6 +7,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class OccupationService {
@@ -23,5 +25,10 @@ public class OccupationService {
                 .build();
 
         return repo.save(newOccupation);
+    }
+
+    public List<OccupationEntity> findAllOccupations() {
+        log.info("Finding all occupations");
+        return repo.findAll();
     }
 }

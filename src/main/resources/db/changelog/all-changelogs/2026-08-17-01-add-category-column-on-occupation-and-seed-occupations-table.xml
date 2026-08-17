@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="add-category-column-in-occupations" author="Raktim">
+        <addColumn tableName="occupations">
+            <column name="category" type="varchar(50)">
+                <constraints nullable="false" />
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="seed-occupations" author="Raktim">
+        <loadData
+                tableName="occupations"
+                file="db/data/occupations.csv"
+                separator=","
+                relativeToChangelogFile="false"
+        >
+            <column name="id" type="uuid" />
+            <column name="name" type="varchar(50) " />
+            <column name="category" type="varchar(50)" />
+        </loadData>
+    </changeSet>
+</databaseChangeLog>
