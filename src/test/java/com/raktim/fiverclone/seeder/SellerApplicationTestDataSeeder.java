@@ -37,6 +37,22 @@ public class SellerApplicationTestDataSeeder {
         return  sellerApplicationRepo.save(entity);
     }
 
+    public SellerApplicationEntity addSellerApplication(
+            UserEntity user,
+            SellerApplicationEntity.SellerApplicationEntityBuilder entityBuilder
+    ) {
+        List<SkillEntity> skills = skillsRepo.findAll();
+
+        SellerApplicationEntity entity =
+                entityBuilder
+                        .user(user)
+                        .skills(Set.of(skills.getFirst(), skills.getLast()))
+                        .submittedAt(Instant.now())
+                        .build();
+
+        return  sellerApplicationRepo.save(entity);
+    }
+
     public SellerApplicationStatusHistoryEntity addSellerApplicationStatusHistory
             (
                     UserEntity user,

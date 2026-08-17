@@ -7,4 +7,5 @@ import java.util.UUID;
 
 public interface SellerPersonalProfileService {
     SellerPersonalProfileResponseDto create(UUID applicationId, SellerPersonalProfileRequestDto dto);
+
 }

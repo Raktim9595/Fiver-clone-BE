@@ -9,7 +9,6 @@ import com.raktim.fiverclone.sellerApplication.model.SellerApplicationEntity;
 import com.raktim.fiverclone.sellerApplication.model.SellerPersonalProfileEntity;
 import com.raktim.fiverclone.sellerApplication.repo.SellerPersonalProfileRepo;
 import com.raktim.fiverclone.sellerApplication.service.SellerApplicationMapper;
-import com.raktim.fiverclone.sellerApplication.service.sellerApplication.SellerApplicationService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,7 +23,6 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class SellerPersonalProfileServiceImpl implements SellerPersonalProfileService {
     private final SellerPersonalProfileRepo repo;
-    private final SellerApplicationService sellerApplicationService;
     private final EntityReferenceResolver entityReferenceResolver;
     private final SellerApplicationMapper mapper;
 
@@ -35,14 +33,18 @@ public class SellerPersonalProfileServiceImpl implements SellerPersonalProfileSe
     public SellerPersonalProfileResponseDto create(UUID applicationId, SellerPersonalProfileRequestDto dto) {
         log.info("Creating SellerPersonalProfile for {} and applicationId {}", dto, applicationId);
 
-        SellerApplicationEntity application = sellerApplicationService.findByIdOrThrow(applicationId);
+        SellerApplicationEntity application = entityReferenceResolver.getRequired(
+                SellerApplicationEntity.class,
+                applicationId
+        );
 
-        application.setCurrentStep(SellerOnboardingSteps.PERSONAL_PROFILE);
+        application.ensureEditable();
+        application.setCurrentStep(SellerOnboardingSteps.PROFESSIONAL_PROFILE);
         application.setCompletionPercentage(50);
 
         Set<LanguageEntity> languages = dto.languages()
                 .stream()
-                .map(id -> entityReferenceResolver.getReference(LanguageEntity.class, id))
+                .map(id -> entityReferenceResolver.getRequired(LanguageEntity.class, id))
                 .collect(Collectors.toSet());
 
         SellerPersonalProfileEntity sellerPersonalProfileEntity = mapper.toSellerPersonalProfileEntity(

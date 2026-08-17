@@ -1,12 +1,14 @@
 package com.raktim.fiverclone.sellerApplication.model;
 
 import com.raktim.fiverclone.common.entities.BaseEntity;
+import com.raktim.fiverclone.common.exceptions.BusinessException;
 import com.raktim.fiverclone.seeds.skills.SkillEntity;
 import com.raktim.fiverclone.sellerApplication.enums.SellerApplicationStatus;
 import com.raktim.fiverclone.sellerApplication.enums.SellerOnboardingSteps;
 import com.raktim.fiverclone.user.model.UserEntity;
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.http.HttpStatus;
 
 import java.time.Instant;
 import java.util.HashSet;
@@ -90,4 +92,26 @@ public class SellerApplicationEntity extends BaseEntity {
             inverseJoinColumns = @JoinColumn(name = "skill_id")
     )
     private Set<SkillEntity> skills = new HashSet<>();
+
+    public void ensureEditable() {
+
+        if (status != SellerApplicationStatus.DRAFT) {
+            throw new BusinessException(
+                    HttpStatus.FORBIDDEN,
+                    "EDITING_NOT_ALLOWED",
+                    "This seller application can only be edited while it is in DRAFT status."
+            );
+        }
+    }
+
+    public void ensureEditableForProfessionalProfile() {
+        ensureEditable();
+        if (currentStep != SellerOnboardingSteps.PROFESSIONAL_PROFILE) {
+            throw new BusinessException(
+                    HttpStatus.FORBIDDEN,
+                    "INVALID_ONBOARDING_STEP",
+                    "This action can be performed  only when professional profile is active."
+            );
+        }
+    }
 }

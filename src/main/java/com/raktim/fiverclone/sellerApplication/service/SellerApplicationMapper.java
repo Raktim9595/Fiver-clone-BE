@@ -29,6 +29,14 @@ public interface SellerApplicationMapper {
     );
 
     @Mapping(target = "application", source = "applicationEntity")
+    @Mapping(target = "occupation", source = "occupation")
+    SellerProfessionalProfileEntity toSellerProfessionalProfileEntity(
+            SellerProfessionalProfileRequestDto dto,
+            SellerApplicationEntity applicationEntity,
+            OccupationEntity occupation
+    );
+
+    @Mapping(target = "application", source = "applicationEntity")
     SellerCertificationEntity toSellerCertificationEntity(
             SellerCertificationRequestDto dto,
             SellerApplicationEntity applicationEntity
@@ -55,6 +63,12 @@ public interface SellerApplicationMapper {
     @Mapping(target = "applicationId", source = "application.id")
     SellerCertificationResponseDto toSellerCertificationResponseDto(
             SellerCertificationEntity sellerCertificationEntity
+    );
+
+    @Mapping(target = "applicationId", source = "application.id")
+    @Mapping(target = "occupation", source = "occupation.name")
+    SellerProfessionalProfileResponseDto toSellerProfessionalProfileResponseDto(
+            SellerProfessionalProfileEntity sellerProfessionalProfileEntity
     );
 
     SellerPersonalProfileResponseDto toSellerPersonalProfileResponseDto(
