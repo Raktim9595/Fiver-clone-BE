@@ -1,9 +1,7 @@
 package com.raktim.fiverclone.mocks;
 
-import com.raktim.fiverclone.sellerApplication.dto.SellerCertificationRequestDto;
-import com.raktim.fiverclone.sellerApplication.dto.SellerEducationRequestDto;
-import com.raktim.fiverclone.sellerApplication.dto.SellerPersonalProfileRequestDto;
-import com.raktim.fiverclone.sellerApplication.dto.SellerPortfolioRequestDto;
+import com.raktim.fiverclone.seeds.experienceLevel.ExperienceLevel;
+import com.raktim.fiverclone.sellerApplication.dto.*;
 import com.raktim.fiverclone.sellerApplication.enums.PortfolioLinkType;
 
 import java.time.LocalDate;
@@ -54,5 +52,13 @@ public class SellerApplicationTestData {
                 .expirationDate(LocalDate.now().plusDays(1))
                 .credentialId("aws-id")
                 .credentialUrl("https://www.amazon.com");
+    }
+
+    public static SellerProfessionalProfileRequestDto.SellerProfessionalProfileRequestDtoBuilder
+        validSellerProfessionalProfileRequestDto() {
+        return SellerProfessionalProfileRequestDto.builder()
+                .professionalLevel(ExperienceLevel.PRO)
+                .occupationId(UUID.fromString("eaec867b-eba1-418a-a1f5-cddb1dcb17a6"))
+                .yearsOfExperience(3);
     }
 }
