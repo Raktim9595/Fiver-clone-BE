@@ -9,6 +9,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
@@ -29,5 +31,17 @@ public class OccupationServiceIntegrationTest {
         assertThat(result).isNotNull();
         assertThat(result.getId()).isNotNull();
         assertThat(result.getName()).isEqualTo("Software Engineer");
+    }
+
+    @Test
+    @DisplayName("""
+            Given method findAllOccupations,
+            And there is no error,
+            Then it should return all the lists of occupations
+            """)
+    public void shouldReturnAllOccupations() {
+        List<OccupationEntity> result = occupationService.findAllOccupations();
+        assertThat(result).isNotNull();
+        assertThat(result.size()).isEqualTo(202);
     }
 }
