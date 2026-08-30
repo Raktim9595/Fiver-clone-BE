@@ -1,12 +1,16 @@
 package com.raktim.fiverclone.sellerApplication.model;
 
 import com.raktim.fiverclone.common.entities.BaseEntity;
+import com.raktim.fiverclone.common.exceptions.BusinessException;
 import com.raktim.fiverclone.language.model.LanguageEntity;
+import com.raktim.fiverclone.sellerApplication.enums.SellerOnboardingSteps;
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.http.HttpStatus;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 
 @Entity
 @Builder(toBuilder = true)
@@ -47,4 +51,14 @@ public class SellerPersonalProfileEntity extends BaseEntity {
             inverseJoinColumns = @JoinColumn(name = "language_id")
     )
     private Set<LanguageEntity> languages = new HashSet<>();
+
+    public void ensureBelongsTo(UUID applicationId) {
+        if (!application.getId().equals(applicationId)) {
+            throw new BusinessException(
+                    HttpStatus.FORBIDDEN,
+                    "SELLER_PERSONAL_PROFILE_NOT_FOUND",
+                    "Seller personal profile mismatched found for this application."
+            );
+        }
+    }
 }

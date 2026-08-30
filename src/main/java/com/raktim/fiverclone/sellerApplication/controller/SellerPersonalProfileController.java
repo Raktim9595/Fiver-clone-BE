@@ -33,4 +33,17 @@ public class SellerPersonalProfileController {
         SellerPersonalProfileResponseDto result = service.create(id, dto);
         return ResponseEntity.status(HttpStatus.CREATED).body(result);
     }
+
+    @PutMapping("/{id}/personal-profile/{personalProfileId}")
+    @Operation(
+            summary = "End point to update the personal profile of the application"
+    )
+    public ResponseEntity<SellerPersonalProfileResponseDto> updateSellerPersonalProfile(
+            @PathVariable UUID id,
+            @PathVariable UUID personalProfileId,
+            @Valid @RequestBody SellerPersonalProfileRequestDto dto
+    ) {
+        SellerPersonalProfileResponseDto result = service.update(id, personalProfileId, dto);
+        return ResponseEntity.ok(result);
+    }
 }

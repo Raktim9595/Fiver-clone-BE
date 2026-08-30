@@ -25,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -109,5 +110,103 @@ public class SellerPersonalProfileServiceIntegrationTest {
                 SellerOnboardingSteps.PERSONAL_PROFILE
         );
         assertThat(currentApplication.getCompletionPercentage()).isEqualTo(0);
+    }
+
+    @Test
+    @DisplayName("""
+            Given method update, When called,
+            And there is no error,
+            Then it should successfully update the personal profile of the seller and return proper response.
+            """)
+    public void shouldUpdateSellerPersonalProfile() {
+        SellerPersonalProfileResponseDto createResult = service.create(application.getId(), dto);
+
+        // set this to review again otherwise it fails
+        application.setCurrentStep(SellerOnboardingSteps.REVIEW);
+
+        SellerPersonalProfileRequestDto updatedDto =
+                SellerApplicationTestData
+                        .validSellerPersonalProfileRequestDto()
+                        .displayName("updated name")
+                        .description("updated description")
+                        .languages(Set.of(
+                                languages.getFirst().getId(),
+                                languages.getLast().getId(),
+                                UUID.fromString("698ae069-a136-4c88-9dd9-2dbdf0b6babd")
+                        ))
+                        .build();
+
+        SellerPersonalProfileResponseDto updateResult =
+                service.update(application.getId(), createResult.id(), updatedDto);
+
+        assertThat(updateResult).isNotNull();
+        assertThat(updateResult).isInstanceOf(SellerPersonalProfileResponseDto.class);
+        assertThat(updateResult.displayName()).isEqualTo("updated name");
+        assertThat(updateResult.description()).isEqualTo("updated description");
+        assertThat(updateResult.languages()).contains(
+                languages.getFirst().getLanguage(),
+                languages.getLast().getLanguage(),
+                "Thai"
+        );
+    }
+
+    @Test
+    @DisplayName("""
+            Given method update, when called,
+            And it throws exception because the application currentStep is not in REVIEW,
+            Then it should throw proper error message and error code
+            """)
+    public void shouldThrowErrorOnUpdate() {
+        SellerPersonalProfileResponseDto createResult = service.create(application.getId(), dto);
+        SellerPersonalProfileRequestDto updatedDto =
+                SellerApplicationTestData
+                        .validSellerPersonalProfileRequestDto()
+                        .displayName("updated name")
+                        .description("updated description")
+                        .languages(Set.of(
+                                languages.getFirst().getId(),
+                                languages.getLast().getId(),
+                                UUID.fromString("698ae069-a136-4c88-9dd9-2dbdf0b6babd")
+                        ))
+                        .build();
+
+        ExceptionTestUtil.assertBusinessException(
+                HttpStatus.FORBIDDEN,
+                "INVALID_STEP_FOR_EDIT",
+                "This action can be performed only when the application current step is in REVIEW.",
+                () -> service.update(application.getId(), createResult.id(), updatedDto)
+        );
+    }
+
+    @Test
+    @DisplayName("""
+            Given method update, when called,
+            And it throws exception because the profile belongs to different application,
+            Then it should throw proper error message and error code
+            """)
+    public void shouldThrowErrorOnUpdateDueToApplicationMismatch() {
+        SellerApplicationEntity newApplication = sellerApplicationTestDataSeeder.addSellerApplication(user);
+
+        SellerPersonalProfileResponseDto createResult = service.create(application.getId(), dto);
+
+        newApplication.setCurrentStep(SellerOnboardingSteps.REVIEW);
+        SellerPersonalProfileRequestDto updatedDto =
+                SellerApplicationTestData
+                        .validSellerPersonalProfileRequestDto()
+                        .displayName("updated name")
+                        .description("updated description")
+                        .languages(Set.of(
+                                languages.getFirst().getId(),
+                                languages.getLast().getId(),
+                                UUID.fromString("698ae069-a136-4c88-9dd9-2dbdf0b6babd")
+                        ))
+                        .build();
+
+        ExceptionTestUtil.assertBusinessException(
+                HttpStatus.FORBIDDEN,
+                "SELLER_PERSONAL_PROFILE_NOT_FOUND",
+                "Seller personal profile mismatched found for this application.",
+                () -> service.update(newApplication.getId(), createResult.id(), updatedDto)
+        );
     }
 }

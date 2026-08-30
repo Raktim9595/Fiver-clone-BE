@@ -3,8 +3,7 @@ package com.raktim.fiverclone.sellerApplication.service;
 import com.raktim.fiverclone.language.model.LanguageEntity;
 import com.raktim.fiverclone.sellerApplication.dto.*;
 import com.raktim.fiverclone.sellerApplication.model.*;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
+import org.mapstruct.*;
 
 import java.util.Set;
 
@@ -73,6 +72,17 @@ public interface SellerApplicationMapper {
 
     SellerPersonalProfileResponseDto toSellerPersonalProfileResponseDto(
             SellerPersonalProfileEntity entity
+    );
+
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "application", ignore = true)
+    @Mapping(target = "createdAt", ignore = true)
+    @Mapping(target = "updatedAt", ignore = true)
+    @Mapping(target = "languages", source = "languages")
+    void updateSellerPersonalProfileFromDto(
+            SellerPersonalProfileRequestDto dto,
+            Set<LanguageEntity> languages,
+            @MappingTarget SellerPersonalProfileEntity entity
     );
 
     default String mapLanguageToName(LanguageEntity language) {

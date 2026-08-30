@@ -3,10 +3,11 @@ import lombok.Builder;
 
 import java.time.Instant;
 import java.util.Set;
+import java.util.UUID;
 
 @Builder
 public record SellerPersonalProfileResponseDto(
-        String id,
+        UUID id,
         String displayName,
         String professionalHeadline,
         String description,
