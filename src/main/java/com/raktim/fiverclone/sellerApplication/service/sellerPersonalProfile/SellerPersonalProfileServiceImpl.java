@@ -42,20 +42,48 @@ public class SellerPersonalProfileServiceImpl implements SellerPersonalProfileSe
         application.setCurrentStep(SellerOnboardingSteps.PROFESSIONAL_PROFILE);
         application.setCompletionPercentage(50);
 
-        Set<LanguageEntity> languages = dto.languages()
-                .stream()
-                .map(id -> entityReferenceResolver.getRequired(LanguageEntity.class, id))
-                .collect(Collectors.toSet());
-
         SellerPersonalProfileEntity sellerPersonalProfileEntity = mapper.toSellerPersonalProfileEntity(
                 dto,
                 application,
-                languages
+                this.getLanguages(dto.languages())
         );
 
         SellerPersonalProfileEntity sellerPersonalProfileEntitySaved = repo.save(sellerPersonalProfileEntity);
         log.info("Successfully saved the personal info for seller {}", applicationId);
 
         return mapper.toSellerPersonalProfileResponseDto(sellerPersonalProfileEntitySaved);
+    }
+
+    @Override
+    @Transactional
+    public SellerPersonalProfileResponseDto update
+            (UUID applicationId,UUID id, SellerPersonalProfileRequestDto dto) {
+        log.info("Updating the seller personal profile for applicationId {}", applicationId);
+        SellerApplicationEntity foundApplication =
+                entityReferenceResolver.getRequired(SellerApplicationEntity.class, applicationId);
+        SellerPersonalProfileEntity foundPersonalProfileEntity =
+                entityReferenceResolver.getRequired(SellerPersonalProfileEntity.class, id);
+
+        // validation before the entity can be updated or not
+        foundApplication.ensureEditableDuringReview();
+        foundPersonalProfileEntity.ensureBelongsTo(applicationId);
+        // validation steps ended here
+
+        mapper.updateSellerPersonalProfileFromDto(
+                dto,
+                this.getLanguages(dto.languages()),
+                foundPersonalProfileEntity
+        );
+
+        log.info("Successfully updated the seller personal profile for applicationId {}", applicationId);
+
+        return  mapper.toSellerPersonalProfileResponseDto(foundPersonalProfileEntity);
+    }
+
+    private Set<LanguageEntity> getLanguages(Set<UUID> languageIds) {
+        return languageIds
+                .stream()
+                .map(id -> entityReferenceResolver.getRequired(LanguageEntity.class, id))
+                .collect(Collectors.toSet());
     }
 }

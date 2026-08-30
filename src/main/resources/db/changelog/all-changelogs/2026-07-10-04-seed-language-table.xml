@@ -11,6 +11,7 @@
                 separator=","
                 relativeToChangelogFile="false"
         >
+            <column name="id" type="uuid" />
             <column name="code" type="varchar(5)" />
             <column name="language" type="varchar(20)" />
         </loadData>

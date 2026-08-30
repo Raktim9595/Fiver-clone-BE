@@ -20,6 +20,7 @@ import java.util.UUID;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(SellerPersonalProfileController.class)
@@ -60,5 +61,23 @@ public class SellerPersonalProfileControllerTest {
         ).andExpect(status().isCreated());
 
         verify(service, times(1)).create(applicationId, dto);
+    }
+
+    @Test
+    @DisplayName("""
+            """)
+    public void shouldInvokeCorrectMethodOnUpdate() throws Exception {
+        UUID applicationId = UUID.randomUUID();
+        UUID personalProfileId = UUID.randomUUID();
+        SellerPersonalProfileRequestDto dto = SellerApplicationTestData
+                .validSellerPersonalProfileRequestDto()
+                .build();
+
+        mockMvc.perform(put("/api/seller-application/{applicationId}/personal-profile/{personalProfileId}",
+                applicationId, personalProfileId)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(dto))
+        ).andExpect(status().isOk());
+        verify(service, times(1)).update(applicationId, personalProfileId, dto);
     }
 }

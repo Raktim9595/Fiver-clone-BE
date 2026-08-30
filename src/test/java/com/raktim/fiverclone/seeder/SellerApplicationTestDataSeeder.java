@@ -5,8 +5,10 @@ import com.raktim.fiverclone.seeds.skills.SkillsRepo;
 import com.raktim.fiverclone.sellerApplication.enums.SellerApplicationStatus;
 import com.raktim.fiverclone.sellerApplication.model.SellerApplicationEntity;
 import com.raktim.fiverclone.sellerApplication.model.SellerApplicationStatusHistoryEntity;
+import com.raktim.fiverclone.sellerApplication.model.SellerPersonalProfileEntity;
 import com.raktim.fiverclone.sellerApplication.repo.SellerApplicationRepo;
 import com.raktim.fiverclone.sellerApplication.repo.SellerApplicationStatusHistoryRepo;
+import com.raktim.fiverclone.sellerApplication.repo.SellerPersonalProfileRepo;
 import com.raktim.fiverclone.user.model.UserEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.test.context.TestComponent;
@@ -22,6 +24,7 @@ public class SellerApplicationTestDataSeeder {
     private final SellerApplicationRepo sellerApplicationRepo;
     private final SellerApplicationStatusHistoryRepo sellerApplicationStatusHistoryRepo;
     private final SkillsRepo skillsRepo;
+    private final SellerPersonalProfileRepo sellerPersonalProfileRepo;
 
     public SellerApplicationEntity addSellerApplication(UserEntity user) {
         List<SkillEntity> skills = skillsRepo.findAll();
@@ -73,6 +76,9 @@ public class SellerApplicationTestDataSeeder {
 
     public SellerApplicationEntity getApplication(UUID id) {
         return sellerApplicationRepo.findById(id).orElse(null);
+    }
+    public SellerPersonalProfileEntity getPersonalProfile(UUID id) {
+        return sellerPersonalProfileRepo.findById(id).orElse(null);
     }
 }
 

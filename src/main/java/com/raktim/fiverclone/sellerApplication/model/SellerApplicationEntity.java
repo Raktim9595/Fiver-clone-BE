@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import java.time.Instant;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 
 @Entity
 @Builder(toBuilder = true)
@@ -94,7 +95,6 @@ public class SellerApplicationEntity extends BaseEntity {
     private Set<SkillEntity> skills = new HashSet<>();
 
     public void ensureEditable() {
-
         if (status != SellerApplicationStatus.DRAFT) {
             throw new BusinessException(
                     HttpStatus.FORBIDDEN,
@@ -111,6 +111,16 @@ public class SellerApplicationEntity extends BaseEntity {
                     HttpStatus.FORBIDDEN,
                     "INVALID_ONBOARDING_STEP",
                     "This action can be performed  only when professional profile is active."
+            );
+        }
+    }
+
+    public void ensureEditableDuringReview() {
+        if (currentStep != SellerOnboardingSteps.REVIEW) {
+            throw new BusinessException(
+                    HttpStatus.FORBIDDEN,
+                    "INVALID_STEP_FOR_EDIT",
+                    "This action can be performed only when the application current step is in REVIEW."
             );
         }
     }
