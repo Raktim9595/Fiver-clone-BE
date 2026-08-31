@@ -13,7 +13,6 @@ import org.springframework.http.HttpStatus;
 import java.time.Instant;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.UUID;
 
 @Entity
 @Builder(toBuilder = true)
@@ -66,24 +65,7 @@ public class SellerApplicationEntity extends BaseEntity {
             cascade = CascadeType.ALL,
             orphanRemoval = true
     )
-    private SellerProfessionalProfileEntity professionalProfile;
-
-    @Builder.Default
-    @OneToMany(
-            mappedBy = "application",
-            cascade = CascadeType.ALL,
-            orphanRemoval = true
-    )
-    private Set<SellerEducationEntity> educationRecords = new HashSet<>();
-
-    @Builder.Default
-    @OneToMany(
-            mappedBy = "application",
-            cascade = CascadeType.ALL,
-            orphanRemoval = true
-    )
-    private Set<SellerPortfolioEntity> portfolios = new HashSet<>();
-
+    private SellerPersonalProfileEntity professionalProfile;
 
     @Builder.Default
     @ManyToMany(fetch = FetchType.LAZY)

@@ -8,6 +8,7 @@ import com.raktim.fiverclone.sellerApplication.dto.SellerEducationRequestDto;
 import com.raktim.fiverclone.sellerApplication.dto.SellerEducationResponseDto;
 import com.raktim.fiverclone.sellerApplication.enums.SellerOnboardingSteps;
 import com.raktim.fiverclone.sellerApplication.model.SellerApplicationEntity;
+import com.raktim.fiverclone.sellerApplication.model.SellerEducationEntity;
 import com.raktim.fiverclone.user.model.UserEntity;
 import com.raktim.fiverclone.utils.ExceptionTestUtil;
 import org.junit.jupiter.api.BeforeEach;
@@ -122,5 +123,25 @@ public class SellerEducationServiceIntegrationTest {
                 "Seller education details mismatched found for this application.",
                 () -> service.update(createResult.id(), newApplication.getId(), updateDto)
         );
+    }
+
+    @Test
+    @DisplayName("""
+            Given delete method, When called, And there is no error,
+            Then it should successfully delete the required seller education for the application
+            """)
+    public void shouldDeleteSellerEducation() {
+        SellerEducationResponseDto createResult =
+                service.create(application.getId(), dto);
+
+        application.setCurrentStep(SellerOnboardingSteps.REVIEW);
+        String result = service.delete(createResult.id(), application.getId());
+
+        assertThat(result).isNotNull();
+        assertThat(result).isEqualTo("Successfully deleted SellerEducationEntity %s for applicationId=%s"
+                .formatted(createResult.id(), application.getId()));
+
+        SellerEducationEntity foundEducation = service.findById(createResult.id());
+        assertThat(foundEducation).isNull();
     }
 }

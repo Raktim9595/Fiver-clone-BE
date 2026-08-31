@@ -24,8 +24,7 @@ import tools.jackson.databind.ObjectMapper;
 import java.util.UUID;
 
 import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(SellerApplicationController.class)
@@ -188,5 +187,56 @@ public class SellerApplicationControllerTest {
         verify(sellerCertificationService, times(1)).update(
                 certificationId, applicationId, dto
         );
+    }
+
+    @Test
+    @DisplayName("""
+            When called DELETE on /api/seller-application/{id}/seller-certification/{certificationId},
+            Then it should invoke proper methods and return proper response
+            """)
+    public void shouldExecuteDeleteSellerCertification() throws Exception  {
+        UUID applicationId = UUID.randomUUID();
+        UUID certificationId = UUID.randomUUID();
+
+        mockMvc.perform(delete("/api/seller-application/{id}/seller-certification/{certificationId}",
+                applicationId, certificationId)
+                .contentType(MediaType.APPLICATION_JSON)
+        ).andExpect(status().isOk());
+
+        verify(sellerCertificationService, times(1)).delete(certificationId, applicationId);
+    }
+
+    @Test
+    @DisplayName("""
+            When called DELETE on /api/seller-application/{id}/seller-education/{educationId},
+            Then it should invoke proper methods and return proper response
+            """)
+    public void shouldExecuteDeleteSellerEducation() throws Exception  {
+        UUID applicationId = UUID.randomUUID();
+        UUID educationId = UUID.randomUUID();
+
+        mockMvc.perform(delete("/api/seller-application/{id}/seller-education/{educationId}",
+                applicationId, educationId)
+                .contentType(MediaType.APPLICATION_JSON)
+        ).andExpect(status().isOk());
+
+        verify(sellerEducationService, times(1)).delete(educationId, applicationId);
+    }
+
+    @Test
+    @DisplayName("""
+            When called DELETE on /api/seller-application/{id}/seller-portfolio/{portfolioId},
+            Then it should invoke proper methods and return proper response
+            """)
+    public void shouldExecuteDeleteSellerPortfolio() throws Exception  {
+        UUID applicationId = UUID.randomUUID();
+        UUID portfolioId = UUID.randomUUID();
+
+        mockMvc.perform(delete("/api/seller-application/{id}/seller-portfolio/{educationId}",
+                applicationId, portfolioId)
+                .contentType(MediaType.APPLICATION_JSON)
+        ).andExpect(status().isOk());
+
+        verify(sellerPortfolioService, times(1)).delete(portfolioId, applicationId);
     }
 }

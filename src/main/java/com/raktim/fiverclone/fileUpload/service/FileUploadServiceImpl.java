@@ -1,22 +1,16 @@
 package com.raktim.fiverclone.fileUpload.service;
 
-import com.raktim.fiverclone.common.exceptions.BusinessException;
 import com.raktim.fiverclone.common.utils.GenerateUploadUrlResult;
 import com.raktim.fiverclone.common.utils.S3Service;
 import com.raktim.fiverclone.common.utils.ServiceExecutor;
 import com.raktim.fiverclone.fileUpload.dto.*;
 import com.raktim.fiverclone.fileUpload.model.UserFileEntity;
-import com.raktim.fiverclone.fileUpload.repo.FileUploadRepo;
 import com.raktim.fiverclone.fileUpload.utils.FileStatus;
 import com.raktim.fiverclone.fileUpload.utils.FileUploadMapper;
-import com.raktim.fiverclone.user.model.UserEntity;
-import com.raktim.fiverclone.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.UUID;
@@ -24,15 +18,15 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 public class FileUploadServiceImpl implements FileUploadService {
-    private final FileUploadRepo fileUploadRepo;
+
+    private static final Logger log =
+            LoggerFactory.getLogger(FileUploadServiceImpl.class);
+
+    private final FilePersistenceService filePersistenceService;
     private final S3Service s3Service;
-    private final UserService userService;
     private final FileUploadMapper fileUploadMapper;
 
-    private static final Logger log = LoggerFactory.getLogger(FileUploadServiceImpl.class);
-
     @Override
-    @Transactional
     public GetUploadUrlResponseDto getUploadUrl(FileUploadDto fileUploadDto) {
         return ServiceExecutor.execute(
                 () -> handleUploadUrlGeneration(fileUploadDto)
@@ -40,57 +34,77 @@ public class FileUploadServiceImpl implements FileUploadService {
     }
 
     @Override
-    @Transactional
     public List<SearchFileResponseDto> searchFile(
             SearchFileRequestDto dto
     ) {
-        return ServiceExecutor.execute(() -> this.handlePresignedUrlGeneration(dto));
+        return ServiceExecutor.execute(
+                () -> handlePresignedUrlGeneration(dto)
+        );
     }
 
-    private List<SearchFileResponseDto> handlePresignedUrlGeneration(
-            SearchFileRequestDto dto
+    @Override
+    public CompleteFileUploadResponseDto completeFileUpload(
+            UUID id,
+            UUID userId,
+            FileStatus fileStatus
     ) {
-        log.info("Getting files for details {}", dto);
-
-        UserEntity user = userService.findUserByIdOrThrow(dto.userId());
-
-        log.info("Getting files for user {} and status {} and type {}",
-                user.getId(), dto.status(), dto.type());
-        List<UserFileEntity> files = fileUploadRepo.findAllByUser_IdAndStatusAndType(
-                dto.userId(),
-                dto.status(),
-                dto.type()
+        return ServiceExecutor.execute(
+                () -> filePersistenceService.completeFileUpload(
+                        id,
+                        userId,
+                        fileStatus
+                )
         );
+    }
 
-        log.info("{} files found for user with id {}", files.size(), user.getId());
+    @Override
+    public UserFileEntity findByIdAndUserIdOrThrow(
+            UUID id,
+            UUID userId
+    ) {
+        return filePersistenceService.findByIdAndUserIdOrThrow(
+                id,
+                userId
+        );
+    }
 
-        return files.parallelStream()
-                .map(file -> SearchFileResponseDto.builder()
-                        .id(file.getId())
-                        .imageUrl(s3Service.getImageUrl(file.getS3Key()))
-                        .type(file.getType())
-                        .build()
-                ).toList();
+    @Override
+    public void deleteFile(UUID id, UUID userId) {
+        ServiceExecutor.execute(() -> {
+            handleFileDeletion(id, userId);
+            return null;
+        });
+    }
+
+    public UserFileEntity findByIdOrThrow(UUID id) {
+        return filePersistenceService.findByIdOrThrow(id);
     }
 
     private GetUploadUrlResponseDto handleUploadUrlGeneration(
             FileUploadDto fileUploadDto
     ) {
-        log.info("Generating sign url for the file upload {}", fileUploadDto);
-
-        String key = this.generateS3Key(fileUploadDto);
-        UserEntity user = userService.findUserByIdOrThrow(fileUploadDto.userId());
-
-        UserFileEntity newEntity = fileUploadMapper.toEntity(
-                fileUploadDto,
-                FileStatus.UPLOADING,
-                key,
-                user
+        log.info(
+                "Generating sign url for the file upload {}",
+                fileUploadDto
         );
 
-        log.info("Uploading file url for the file upload {} and file key {}", fileUploadDto, key);
-        UserFileEntity savedFile = fileUploadRepo.save(newEntity);
-        GenerateUploadUrlResult uploadUrlResult = s3Service.generateUploadUrl(key, fileUploadDto.contentType());
+        String key = generateS3Key(fileUploadDto);
+        UserFileEntity savedFile =
+                filePersistenceService.createUploadingFile(
+                        fileUploadDto,
+                        key
+                );
+        log.info(
+                "Generating upload URL for file upload {} and file key {}",
+                fileUploadDto,
+                key
+        );
+
+        GenerateUploadUrlResult uploadUrlResult =
+                s3Service.generateUploadUrl(
+                        key,
+                        fileUploadDto.contentType()
+                );
 
         return fileUploadMapper.toUploadUrlResponseDto(
                 savedFile,
@@ -99,91 +113,58 @@ public class FileUploadServiceImpl implements FileUploadService {
         );
     }
 
-    @Override
-    @Transactional
-    public CompleteFileUploadResponseDto completeFileUpload(
-            UUID id,
-            UUID userId,
-            FileStatus fileStatus
+    private List<SearchFileResponseDto> handlePresignedUrlGeneration(
+            SearchFileRequestDto dto
     ) {
-        return ServiceExecutor.execute(() -> handleFileUploadCompletion(id, userId, fileStatus));
-    }
+        log.info("Getting files for details {}", dto);
+        List<FilePersistenceService.FileSearchResult> files =
+                filePersistenceService.searchFiles(dto);
 
-    private CompleteFileUploadResponseDto handleFileUploadCompletion(
-            UUID id,
-            UUID userId,
-            FileStatus fileStatus
-    ) {
-        log.info("Completing file upload {} with status of {}", id, fileStatus);
-
-        UserFileEntity savedFile = this.findByIdAndUserIdOrThrow(id, userId);
-        this.verifyStatusBeforeUpdate(savedFile);
-
-        savedFile.setStatus(fileStatus);
-        UserFileEntity updatedFile = fileUploadRepo.save(savedFile);
-        log.info("Completed file upload {} with status of {}", id, fileStatus);
-
-        return fileUploadMapper.toCompleteFileUploadResponseDto(updatedFile);
-    }
-
-    private void verifyStatusBeforeUpdate(UserFileEntity userFile) {
-        if (!userFile.getStatus().equals(FileStatus.UPLOADING)) {
-            throw new BusinessException(
-                    HttpStatus.BAD_REQUEST,
-                    "INVALID_FILE_STATUS",
-                    "Only file with status UPLOADING can be updated"
-            );
-        }
-    }
-
-    @Override
-    public UserFileEntity findByIdAndUserIdOrThrow(UUID id, UUID userId) {
-        return fileUploadRepo.findByIdAndUserId(id, userId).orElseThrow(
-                () -> new BusinessException(
-                        HttpStatus.NOT_FOUND,
-                        "USER_FILE_NOT_FOUND",
-                        "File %s for user %s not found".formatted(id, userId)
-                )
+        log.info(
+                "{} files found for user with id {}",
+                files.size(),
+                dto.userId()
         );
+
+        return files.stream()
+                .map(file ->
+                        SearchFileResponseDto.builder()
+                                .id(file.id())
+                                .imageUrl(
+                                        s3Service.getImageUrl(
+                                                file.s3Key()
+                                        )
+                                )
+                                .type(file.type())
+                                .build()
+                )
+                .toList();
     }
 
-    @Override
-    @Transactional
-    public void deleteFile(UUID id, UUID userId) {
+    private void handleFileDeletion(
+            UUID id,
+            UUID userId
+    ) {
         log.info("Deleting file {}", id);
+        FilePersistenceService.FileDeletionResult file =
+                filePersistenceService.prepareFileDeletion(
+                        id,
+                        userId
+                );
+        s3Service.deleteFile(file.s3Key());
+        filePersistenceService.deletePreparedFile(file.id());
 
-        UserFileEntity file = this.findByIdOrThrow(id);
-
-        // validate the user is the owner of the file
-        if (!file.getUser().getId().equals(userId)) {
-            throw new BusinessException(
-                    HttpStatus.FORBIDDEN,
-                    "FORBIDDEN_TO_ACCESS",
-                    "You are not allowed to delete the file."
-            );
-        }
-
-        s3Service.deleteFile(file.getS3Key());
-        fileUploadRepo.delete(file);
         log.info("Successfully deleted file {}", id);
     }
 
-    public UserFileEntity findByIdOrThrow(UUID id) {
-        return fileUploadRepo.findById(id).orElseThrow(
-                () -> new BusinessException(
-                        HttpStatus.NOT_FOUND,
-                        "FILE_NOT_FOUND",
-                        "File %s not found".formatted(id)
-                )
-        );
-    }
-
     private String generateS3Key(FileUploadDto dto) {
-        String cleanFileName = sanitizeFileName(dto.fileName());
+        String cleanFileName =
+                sanitizeFileName(dto.fileName());
+
         return "users/%s/%s/%s-%s".formatted(
                 dto.userId(),
                 dto.type().name().toLowerCase(),
-                UUID.randomUUID().toString(),
+                UUID.randomUUID(),
                 cleanFileName
         );
     }

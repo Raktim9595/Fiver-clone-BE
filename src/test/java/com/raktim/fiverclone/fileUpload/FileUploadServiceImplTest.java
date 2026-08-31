@@ -8,6 +8,7 @@ import com.raktim.fiverclone.fileUpload.dto.FileUploadDto;
 import com.raktim.fiverclone.fileUpload.dto.GetUploadUrlResponseDto;
 import com.raktim.fiverclone.fileUpload.model.UserFileEntity;
 import com.raktim.fiverclone.fileUpload.repo.FileUploadRepo;
+import com.raktim.fiverclone.fileUpload.service.FilePersistenceService;
 import com.raktim.fiverclone.fileUpload.service.FileUploadServiceImpl;
 import com.raktim.fiverclone.fileUpload.utils.FileStatus;
 import com.raktim.fiverclone.fileUpload.utils.FileUploadMapper;
@@ -48,10 +49,16 @@ public class FileUploadServiceImplTest {
     @BeforeEach
     public void setUp() {
         FileUploadMapper mapper = Mappers.getMapper(FileUploadMapper.class);
+        FilePersistenceService persistenceService =
+                new FilePersistenceService(
+                        fileUploadRepo,
+                        userService,
+                        mapper
+                );
+
         fileUploadService = new FileUploadServiceImpl(
-                fileUploadRepo,
+               persistenceService,
                 s3Service,
-                userService,
                 mapper
         );
     }

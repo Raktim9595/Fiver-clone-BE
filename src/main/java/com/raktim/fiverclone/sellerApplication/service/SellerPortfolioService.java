@@ -21,6 +21,11 @@ public class SellerPortfolioService {
     private final EntityReferenceResolver entityReferenceResolver;
     private final SellerApplicationMapper mapper;
 
+    private record ValidationResult(
+            SellerPortfolioEntity sellerPortfolio,
+            SellerApplicationEntity sellerApplication
+    ) {}
+
     private static final Logger log = LoggerFactory.getLogger(SellerPortfolioService.class);
 
     public SellerPortfolioResponseDto create(UUID applicationId, SellerPortfolioRequestDto dto) {
@@ -44,18 +49,41 @@ public class SellerPortfolioService {
             SellerPortfolioRequestDto dto
     ) {
         log.info("Updating seller portfolio details for application {}", id);
-        SellerApplicationEntity application = getApplication(applicationId);
-        SellerPortfolioEntity foundPortfolioEntity = entityReferenceResolver
-                .getRequired(SellerPortfolioEntity.class, id);
-
-        // validations
-        application.ensureEditableDuringReview();
-        foundPortfolioEntity.ensureBelongsTo(applicationId);
+        ValidationResult validationResult = validateAndReturn(id, applicationId);
+        SellerPortfolioEntity foundPortfolioEntity = validationResult.sellerPortfolio();
 
         mapper.updateSellerPortfolioFromDto(dto, foundPortfolioEntity);
         log.info("Updated seller portfolio details for application {}", applicationId);
 
         return mapper.toSellerPortfolioResponseDto(foundPortfolioEntity);
+    }
+
+    @Transactional
+    public String delete(UUID id, UUID applicationId) {
+        log.info("Deleting seller portfolio details for application {}", id);
+        ValidationResult validationResult = validateAndReturn(id, applicationId);
+
+        repo.delete(validationResult.sellerPortfolio());
+        log.info("Deleted seller portfolio details for application {}", applicationId);
+        return "Successfully deleted seller portfolio with id=%s for application id = %s"
+                .formatted(id, applicationId);
+    }
+
+    public SellerPortfolioEntity findById(UUID id) {
+        log.info("Finding seller portfolio details for id={}", id);
+        return repo.findById(id).orElse(null);
+    }
+
+    private ValidationResult validateAndReturn(UUID portfolioId, UUID applicationId) {
+        SellerApplicationEntity application = getApplication(applicationId);
+        SellerPortfolioEntity foundPortfolioEntity = entityReferenceResolver
+                .getRequired(SellerPortfolioEntity.class, portfolioId);
+
+        // validations
+        application.ensureEditableDuringReview();
+        foundPortfolioEntity.ensureBelongsTo(applicationId);
+
+        return new ValidationResult(foundPortfolioEntity, application);
     }
 
     private SellerApplicationEntity getApplication(UUID id) {
