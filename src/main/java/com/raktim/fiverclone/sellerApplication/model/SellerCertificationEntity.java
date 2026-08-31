@@ -1,10 +1,13 @@
 package com.raktim.fiverclone.sellerApplication.model;
 
 import com.raktim.fiverclone.common.entities.BaseEntity;
+import com.raktim.fiverclone.common.exceptions.BusinessException;
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.http.HttpStatus;
 
 import java.time.LocalDate;
+import java.util.UUID;
 
 @Data
 @NoArgsConstructor
@@ -35,4 +38,14 @@ public class SellerCertificationEntity extends BaseEntity {
 
     @Column(name = "credential_url")
     private String credentialUrl;
+
+    public void ensureBelongsTo(UUID applicationId) {
+        if (!applicationId.equals(application.getId())) {
+            throw new BusinessException(
+                    HttpStatus.FORBIDDEN,
+                    "MISMATCH_SELLER_CERTIFICATION_AND_APPLICATION",
+                    "Seller certification details mismatched found for this application."
+            );
+        }
+    }
 }

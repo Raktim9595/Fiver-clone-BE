@@ -1,8 +1,12 @@
 package com.raktim.fiverclone.sellerApplication.model;
 
 import com.raktim.fiverclone.common.entities.BaseEntity;
+import com.raktim.fiverclone.common.exceptions.BusinessException;
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.http.HttpStatus;
+
+import java.util.UUID;
 
 @Data
 @NoArgsConstructor
@@ -37,4 +41,14 @@ public class SellerEducationEntity extends BaseEntity {
     @Builder.Default
     @Column(name = "is_current", nullable = false)
     private Boolean current = false;
+
+    public void ensureBelongsTo(UUID applicationId) {
+        if (!applicationId.equals(application.getId())) {
+            throw new BusinessException(
+                    HttpStatus.FORBIDDEN,
+                    "MISMATCH_SELLER_EDUCATION_AND_APPLICATION",
+                    "Seller education details mismatched found for this application."
+            );
+        }
+    }
 }

@@ -36,7 +36,9 @@ public class SellerProfessionalProfileController {
     }
 
     @PutMapping("/{applicationId}/professional-profile/{professionalProfileId}")
-    @Operation()
+    @Operation(
+            summary = "Endpoint to update professional profile of the application"
+    )
     public ResponseEntity<SellerProfessionalProfileResponseDto>
         updateSellerProfessionalProfile(
                 @PathVariable UUID applicationId,

@@ -38,8 +38,8 @@ public class SellerApplicationTestData {
     public static SellerPortfolioRequestDto.SellerPortfolioRequestDtoBuilder
         validSellerPortfolioRequestDto() {
         return SellerPortfolioRequestDto.builder()
-                .url("https://www.portfolio.com")
-                .title("Linkedin link")
+                .url("https://linkedin.com")
+                .title("My linked in profile page")
                 .linkType(PortfolioLinkType.LINKEDIN);
     }
 

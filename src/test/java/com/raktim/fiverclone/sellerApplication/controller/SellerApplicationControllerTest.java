@@ -25,6 +25,7 @@ import java.util.UUID;
 
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(SellerApplicationController.class)
@@ -111,6 +112,8 @@ public class SellerApplicationControllerTest {
 
     @Test
     @DisplayName("""
+            When called POST on /api/seller-application/{id}/seller-certification,
+            Then it should invoke proper methods and return proper response
             """)
     public void shouldExecuteAddSellerCertification() throws Exception  {
         UUID applicationId = UUID.randomUUID();
@@ -122,5 +125,68 @@ public class SellerApplicationControllerTest {
         ).andExpect(status().isCreated());
 
         verify(sellerCertificationService, times(1)).create(applicationId, dto);
+    }
+
+    @Test
+    @DisplayName("""
+            When called PUT on /api/seller-application/{id}/seller-education/{educationId},
+            Then it should invoke proper methods and return proper response
+            """)
+    public void shouldExecuteUpdateSellerEducation() throws Exception  {
+        UUID applicationId = UUID.randomUUID();
+        UUID educationId = UUID.randomUUID();
+        SellerEducationRequestDto dto = SellerApplicationTestData.validSellerEducationRequestDto().build();
+
+        mockMvc.perform(put("/api/seller-application/{id}/seller-education/{educationId}",
+                applicationId, educationId)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(dto))
+        ).andExpect(status().isOk());
+
+        verify(sellerEducationService, times(1)).update(
+                educationId, applicationId, dto
+        );
+    }
+
+    @Test
+    @DisplayName("""
+            When called PUT on /api/seller-application/{id}/seller-portfolio/{portfolioId},
+            Then it should invoke proper methods and return proper response
+            """)
+    public void shouldExecuteUpdateSellerPortfolio() throws Exception  {
+        UUID applicationId = UUID.randomUUID();
+        UUID portfolioId = UUID.randomUUID();
+        SellerPortfolioRequestDto dto = SellerApplicationTestData.validSellerPortfolioRequestDto().build();
+
+        mockMvc.perform(put("/api/seller-application/{id}/seller-portfolio/{portfolioId}",
+                applicationId, portfolioId)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(dto))
+        ).andExpect(status().isOk());
+
+        verify(sellerPortfolioService, times(1)).update(
+                portfolioId, applicationId, dto
+        );
+    }
+
+    @Test
+    @DisplayName("""
+            When called PUT on /api/seller-application/{id}/seller-certification/{certificationId},
+            Then it should invoke proper methods and return proper response
+            """)
+    public void shouldExecuteUpdateSellerCertification() throws Exception  {
+        UUID applicationId = UUID.randomUUID();
+        UUID certificationId = UUID.randomUUID();
+        SellerCertificationRequestDto dto = SellerApplicationTestData.validSellerCertificationRequestDto().build();
+
+        mockMvc.perform(put("/api/seller-application/{id}/seller-certification/{certificationId}",
+                applicationId, certificationId)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(dto))
+        ).andExpect(status().isOk());
+
+        verify(sellerCertificationService, times(1)).update(
+                certificationId, applicationId, dto
+        );
     }
 }

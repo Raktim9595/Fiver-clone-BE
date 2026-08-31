@@ -6,13 +6,17 @@ import com.raktim.fiverclone.seeder.SellerApplicationTestDataSeeder;
 import com.raktim.fiverclone.seeder.UserTestDataSeeder;
 import com.raktim.fiverclone.sellerApplication.dto.SellerCertificationRequestDto;
 import com.raktim.fiverclone.sellerApplication.dto.SellerCertificationResponseDto;
+import com.raktim.fiverclone.sellerApplication.enums.SellerOnboardingSteps;
 import com.raktim.fiverclone.sellerApplication.model.SellerApplicationEntity;
+import com.raktim.fiverclone.user.model.UserEntity;
+import com.raktim.fiverclone.utils.ExceptionTestUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.http.HttpStatus;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,11 +39,14 @@ public class SellerCertificationServiceIntegrationTest {
     private UserTestDataSeeder userTestDataSeeder;
 
     private SellerApplicationEntity application;
+    private UserEntity user;
+    private SellerCertificationRequestDto dto;
 
     @BeforeEach
     public void setup() {
-        var user = userTestDataSeeder.addUser();
+        user = userTestDataSeeder.addUser();
         application = sellerApplicationTestDataSeeder.addSellerApplication(user);
+        dto = SellerApplicationTestData.validSellerCertificationRequestDto().build();
     }
 
     @Test
@@ -48,8 +55,6 @@ public class SellerCertificationServiceIntegrationTest {
             Then it should create the new certification entity and return
             """)
     public void shouldCreateSellerCertification() {
-        SellerCertificationRequestDto dto = SellerApplicationTestData.validSellerCertificationRequestDto().build();
-
         SellerCertificationResponseDto result =
                 service.create(application.getId(), dto);
 
@@ -57,5 +62,53 @@ public class SellerCertificationServiceIntegrationTest {
         assertThat(result).isInstanceOf(SellerCertificationResponseDto.class);
         assertThat(result.applicationId()).isEqualTo(application.getId());
         assertThat(result.certificationName()).isEqualTo("AWS cloud hero");
+    }
+
+    @Test
+    @DisplayName("""
+            Given method update when called, And there is no error,
+            Then it should successfully update the seller certifications and return proper response
+            """)
+    public void shouldUpdateSellerCertification() {
+        SellerCertificationResponseDto createResult = service.create(application.getId(), dto);
+
+        SellerCertificationRequestDto updateDto = SellerApplicationTestData
+                .validSellerCertificationRequestDto()
+                .certificationName("Just a random thing")
+                .issuingOrganization("High as dope")
+                .build();
+
+        application.setCurrentStep(SellerOnboardingSteps.REVIEW);
+
+        SellerCertificationResponseDto updateResult = service
+                .update(createResult.id(), application.getId(), updateDto);
+
+        assertThat(updateResult).isNotNull();
+        assertThat(updateResult).isInstanceOf(SellerCertificationResponseDto.class);
+        assertThat(updateResult.applicationId()).isEqualTo(application.getId());
+        assertThat(updateResult.certificationName()).isEqualTo("Just a random thing");
+        assertThat(updateResult.issuingOrganization()).isEqualTo("High as dope");
+    }
+
+    @Test
+    @DisplayName("""
+            """)
+    public void shouldThrowErrorOnUpdateSellerCertification() {
+        SellerCertificationResponseDto createResult = service.create(application.getId(), dto);
+        SellerApplicationEntity newApplication = sellerApplicationTestDataSeeder.addSellerApplication(user);
+
+        newApplication.setCurrentStep(SellerOnboardingSteps.REVIEW);
+        SellerCertificationRequestDto updateDto = SellerApplicationTestData
+                .validSellerCertificationRequestDto()
+                .certificationName("Just a random thing")
+                .issuingOrganization("High as dope")
+                .build();
+
+        ExceptionTestUtil.assertBusinessException(
+                HttpStatus.FORBIDDEN,
+                "MISMATCH_SELLER_CERTIFICATION_AND_APPLICATION",
+                "Seller certification details mismatched found for this application.",
+                () -> service.update(createResult.id(), newApplication.getId(), updateDto)
+        );
     }
 }
