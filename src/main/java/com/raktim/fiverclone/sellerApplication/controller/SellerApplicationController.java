@@ -50,6 +50,21 @@ public class SellerApplicationController {
         return ResponseEntity.status(HttpStatus.CREATED).body(result);
     }
 
+    @PutMapping("/{id}/seller-education/{sellerEducationId}")
+    @Operation(
+            summary = "Update the education details of the seller application"
+    )
+    public ResponseEntity<SellerEducationResponseDto> updateSellerEducation(
+            @PathVariable UUID id,
+            @PathVariable UUID sellerEducationId,
+            @Valid @RequestBody SellerEducationRequestDto dto
+    ) {
+        SellerEducationResponseDto result = sellerEducationService.update(
+                sellerEducationId, id, dto
+        );
+        return ResponseEntity.ok(result);
+    }
+
     @PostMapping("/{id}/seller-portfolio")
     @Operation(
             summary = "Add seller portfolio details in the application"
@@ -60,6 +75,21 @@ public class SellerApplicationController {
     ) {
         SellerPortfolioResponseDto result = sellerPortfolioService.create(id, dto);
         return ResponseEntity.status(HttpStatus.CREATED).body(result);
+    }
+
+    @PutMapping("/{id}/seller-portfolio/{portfolioId}")
+    @Operation(
+            summary = "Update the portfolio details of the seller application"
+    )
+    public ResponseEntity<SellerPortfolioResponseDto> updateSellerPortfolio(
+            @PathVariable UUID id,
+            @PathVariable UUID portfolioId,
+            @Valid @RequestBody SellerPortfolioRequestDto dto
+    ) {
+        SellerPortfolioResponseDto result = sellerPortfolioService.update(
+                portfolioId, id, dto
+        );
+        return ResponseEntity.ok(result);
     }
 
     @PostMapping("/{id}/seller-certification")
@@ -74,5 +104,18 @@ public class SellerApplicationController {
                 sellerCertificationService.create(id, dto);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(result);
+    }
+
+    @PutMapping("/{id}/seller-certification/{certificationId}")
+    @Operation(
+            summary = "Update seller certification for the seller application"
+    )
+    public ResponseEntity<SellerCertificationResponseDto> updateSellerCertification(
+            @PathVariable UUID id,
+            @PathVariable UUID certificationId,
+            @Valid @RequestBody SellerCertificationRequestDto dto
+    ) {
+        SellerCertificationResponseDto result = sellerCertificationService.update(certificationId, id, dto);
+        return ResponseEntity.ok(result);
     }
 }

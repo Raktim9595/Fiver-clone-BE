@@ -99,4 +99,31 @@ public interface SellerApplicationMapper {
             OccupationEntity occupation,
             @MappingTarget SellerProfessionalProfileEntity entity
     );
+
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "application", ignore = true)
+    @Mapping(target = "createdAt", ignore = true)
+    @Mapping(target = "updatedAt", ignore = true)
+    void updateSellerEducationFromDto(
+            SellerEducationRequestDto dto,
+            @MappingTarget SellerEducationEntity sellerEducationEntity
+    );
+
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "application", ignore = true)
+    @Mapping(target = "createdAt", ignore = true)
+    @Mapping(target = "updatedAt", ignore = true)
+    void updateSellerPortfolioFromDto(
+            SellerPortfolioRequestDto dto,
+            @MappingTarget SellerPortfolioEntity sellerPortfolioEntity
+    );
+
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "application", ignore = true)
+    @Mapping(target = "createdAt", ignore = true)
+    @Mapping(target = "updatedAt", ignore = true)
+    void updateSellerCertificationFromDto(
+            SellerCertificationRequestDto dto,
+            @MappingTarget SellerCertificationEntity sellerCertificationEntity
+    );
 }
