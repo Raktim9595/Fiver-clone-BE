@@ -8,6 +8,7 @@ import com.raktim.fiverclone.sellerApplication.dto.SellerCertificationRequestDto
 import com.raktim.fiverclone.sellerApplication.dto.SellerCertificationResponseDto;
 import com.raktim.fiverclone.sellerApplication.enums.SellerOnboardingSteps;
 import com.raktim.fiverclone.sellerApplication.model.SellerApplicationEntity;
+import com.raktim.fiverclone.sellerApplication.model.SellerCertificationEntity;
 import com.raktim.fiverclone.user.model.UserEntity;
 import com.raktim.fiverclone.utils.ExceptionTestUtil;
 import org.junit.jupiter.api.BeforeEach;
@@ -92,6 +93,9 @@ public class SellerCertificationServiceIntegrationTest {
 
     @Test
     @DisplayName("""
+            Given method update, When called,
+            And there is an error due to certification owned by different application,
+            Then it should return proper exception
             """)
     public void shouldThrowErrorOnUpdateSellerCertification() {
         SellerCertificationResponseDto createResult = service.create(application.getId(), dto);
@@ -110,5 +114,26 @@ public class SellerCertificationServiceIntegrationTest {
                 "Seller certification details mismatched found for this application.",
                 () -> service.update(createResult.id(), newApplication.getId(), updateDto)
         );
+    }
+
+    @Test
+    @DisplayName("""
+            Given method delete, When called
+            And there is no error,
+            Then it should successfully delete and return proper message
+            """)
+    public void shouldDelete() {
+        SellerCertificationResponseDto createResult = service.create(application.getId(), dto);
+        application.setCurrentStep(SellerOnboardingSteps.REVIEW);
+
+        String result = service.delete(createResult.id(), application.getId());
+        assertThat(result).isNotNull();
+        assertThat(result).isEqualTo("Successfully deleted Seller Certification with applicationId %s and certificationId %s"
+                .formatted(application.getId(), createResult.id()));
+
+        SellerCertificationEntity certificationEntity = service.findById(createResult.id());
+        assertThat(certificationEntity).isNull();
+        SellerApplicationEntity foundApplication = sellerApplicationTestDataSeeder.getApplication(application.getId());
+        assertThat(foundApplication).isNotNull();
     }
 }

@@ -9,6 +9,7 @@ import com.raktim.fiverclone.sellerApplication.dto.SellerPortfolioResponseDto;
 import com.raktim.fiverclone.sellerApplication.enums.PortfolioLinkType;
 import com.raktim.fiverclone.sellerApplication.enums.SellerOnboardingSteps;
 import com.raktim.fiverclone.sellerApplication.model.SellerApplicationEntity;
+import com.raktim.fiverclone.sellerApplication.model.SellerPortfolioEntity;
 import com.raktim.fiverclone.user.model.UserEntity;
 import com.raktim.fiverclone.utils.ExceptionTestUtil;
 import org.junit.jupiter.api.BeforeEach;
@@ -115,5 +116,23 @@ public class SellerPortfolioServiceIntegrationTest {
                         createResult.id(), newApplication.getId(), updateDto
                 )
         );
+    }
+
+    @Test
+    @DisplayName("""
+            Give method delete, When called, And there is no error,
+            Then it should successfully delete the seller portfolio details
+            """)
+    public void shouldDeleteSellerPortfolio() {
+        SellerPortfolioResponseDto createResult = service.create(application.getId(), dto);
+        application.setCurrentStep(SellerOnboardingSteps.REVIEW);
+        String deleteResult = service.delete(createResult.id(), application.getId());
+
+        assertThat(deleteResult).isNotNull();
+        assertThat(deleteResult).isEqualTo("Successfully deleted seller portfolio with id=%s for application id = %s"
+                .formatted(createResult.id(), application.getId()));
+
+        SellerPortfolioEntity sellerPortfolio = service.findById(createResult.id());
+        assertThat(sellerPortfolio).isNull();
     }
 }

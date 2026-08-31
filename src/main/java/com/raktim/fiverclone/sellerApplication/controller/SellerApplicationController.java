@@ -118,4 +118,37 @@ public class SellerApplicationController {
         SellerCertificationResponseDto result = sellerCertificationService.update(certificationId, id, dto);
         return ResponseEntity.ok(result);
     }
+
+    @DeleteMapping("/{id}/seller-certification/{certificationId}")
+    @Operation(
+            summary = "Delete seller certification for the seller application"
+    )
+    public ResponseEntity<String> deleteSellerCertification(
+            @PathVariable UUID id,
+            @PathVariable UUID certificationId
+    ) {
+        return ResponseEntity.ok(sellerCertificationService.delete(certificationId, id));
+    }
+
+    @DeleteMapping("/{id}/seller-education/{educationId}")
+    @Operation(
+            summary = "Delete seller education details for the given application"
+    )
+    public ResponseEntity<String> deleteSellerEducation(
+            @PathVariable UUID id,
+            @PathVariable UUID educationId
+    ) {
+        return ResponseEntity.ok(sellerEducationService.delete(educationId, id));
+    }
+
+    @DeleteMapping("/{id}/seller-portfolio/{portfolioId}")
+    @Operation(
+            summary = "Delete seller portfolio details for the given application"
+    )
+    public ResponseEntity<String> deleteSellerPortfolio(
+            @PathVariable UUID id,
+            @PathVariable UUID portfolioId
+    ) {
+        return ResponseEntity.ok(sellerPortfolioService.delete(portfolioId, id));
+    }
 }
