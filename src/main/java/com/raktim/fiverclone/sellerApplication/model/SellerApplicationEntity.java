@@ -110,7 +110,7 @@ public class SellerApplicationEntity extends BaseEntity {
             throw new BusinessException(
                     HttpStatus.FORBIDDEN,
                     "INVALID_ONBOARDING_STEP",
-                    "This action can be performed  only when professional profile is active."
+                    "This action can be performed only when professional profile is active."
             );
         }
     }

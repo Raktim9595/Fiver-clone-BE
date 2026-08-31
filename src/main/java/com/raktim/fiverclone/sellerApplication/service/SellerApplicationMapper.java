@@ -88,4 +88,15 @@ public interface SellerApplicationMapper {
     default String mapLanguageToName(LanguageEntity language) {
         return language.getLanguage();
     }
+
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "application", ignore = true)
+    @Mapping(target = "createdAt", ignore = true)
+    @Mapping(target = "updatedAt", ignore = true)
+    @Mapping(target = "occupation", source = "occupation")
+    void updateSellerProfessionalProfileFromDto(
+            SellerProfessionalProfileRequestDto dto,
+            OccupationEntity occupation,
+            @MappingTarget SellerProfessionalProfileEntity entity
+    );
 }
