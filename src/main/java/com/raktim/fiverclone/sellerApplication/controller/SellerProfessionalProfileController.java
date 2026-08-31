@@ -34,4 +34,17 @@ public class SellerProfessionalProfileController {
         SellerProfessionalProfileResponseDto result = service.createProfessionalProfile(id, dto);
         return ResponseEntity.status(HttpStatus.CREATED).body(result);
     }
+
+    @PutMapping("/{applicationId}/professional-profile/{professionalProfileId}")
+    @Operation()
+    public ResponseEntity<SellerProfessionalProfileResponseDto>
+        updateSellerProfessionalProfile(
+                @PathVariable UUID applicationId,
+                @PathVariable UUID professionalProfileId,
+                @Valid @RequestBody SellerProfessionalProfileRequestDto dto
+                ) {
+        SellerProfessionalProfileResponseDto result =
+                service.update(professionalProfileId, applicationId, dto);
+        return ResponseEntity.ok(result);
+    }
 }

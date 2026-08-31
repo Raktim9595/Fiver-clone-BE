@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
@@ -24,6 +25,7 @@ public class SellerProfessionalProfileService {
 
     private static final Logger log = LoggerFactory.getLogger(SellerProfessionalProfileService.class);
 
+    @Transactional
     public SellerProfessionalProfileResponseDto createProfessionalProfile(
             UUID applicationId,
             SellerProfessionalProfileRequestDto dto
@@ -37,10 +39,7 @@ public class SellerProfessionalProfileService {
 
         application.ensureEditableForProfessionalProfile();
 
-        OccupationEntity occupation = entityReferenceResolver.getRequired(
-                OccupationEntity.class,
-                dto.occupationId()
-        );
+        OccupationEntity occupation = getOccupation(dto.occupationId());
 
         SellerProfessionalProfileEntity sellerProfessionalProfileEntity =
                 mapper.toSellerProfessionalProfileEntity(dto, application, occupation);
@@ -52,5 +51,32 @@ public class SellerProfessionalProfileService {
         log.info("Created personal profile for application {}", applicationId);
 
         return mapper.toSellerProfessionalProfileResponseDto(sellerProfessionalProfileEntity);
+    }
+
+    @Transactional
+    public SellerProfessionalProfileResponseDto update(
+            UUID id,
+            UUID applicationId,
+            SellerProfessionalProfileRequestDto dto
+    ) {
+        log.info("Updating personal profile for application {}", id);
+        SellerApplicationEntity foundApplication =
+                entityReferenceResolver.getRequired(SellerApplicationEntity.class, applicationId);
+        SellerProfessionalProfileEntity foundPersonalProfileEntity =
+                entityReferenceResolver.getRequired(SellerProfessionalProfileEntity.class, id);
+
+        // validation for the entities can be editable
+        foundApplication.ensureEditableDuringReview();
+        foundPersonalProfileEntity.ensureBelongsTo(applicationId);
+        // validation steps end here
+
+        OccupationEntity occupation = getOccupation(dto.occupationId());
+        mapper.updateSellerProfessionalProfileFromDto(dto, occupation, foundPersonalProfileEntity);
+        log.info("Successfully updated personal profile for application {}", id);
+        return mapper.toSellerProfessionalProfileResponseDto(foundPersonalProfileEntity);
+    }
+
+    private OccupationEntity getOccupation(UUID id) {
+        return entityReferenceResolver.getRequired(OccupationEntity.class, id);
     }
 }

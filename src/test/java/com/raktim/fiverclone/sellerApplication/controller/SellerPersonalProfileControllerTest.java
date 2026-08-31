@@ -65,6 +65,9 @@ public class SellerPersonalProfileControllerTest {
 
     @Test
     @DisplayName("""
+            When called PUT on /api/seller-application/{id}/personal-profile/{personalProfileId},
+            And there is no error,
+            Then it should invoke correct methods and return proper response
             """)
     public void shouldInvokeCorrectMethodOnUpdate() throws Exception {
         UUID applicationId = UUID.randomUUID();

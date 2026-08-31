@@ -1,9 +1,13 @@
 package com.raktim.fiverclone.sellerApplication.model;
 
 import com.raktim.fiverclone.common.entities.BaseEntity;
+import com.raktim.fiverclone.common.exceptions.BusinessException;
 import com.raktim.fiverclone.seeds.experienceLevel.ExperienceLevel;
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.http.HttpStatus;
+
+import java.util.UUID;
 
 @Data
 @NoArgsConstructor
@@ -31,4 +35,14 @@ public class SellerProfessionalProfileEntity extends BaseEntity {
     @Builder.Default
     @Column(name = "is_active", nullable = false)
     private Boolean active = true;
+
+    public void ensureBelongsTo(UUID applicationId) {
+        if (!application.getId().equals(applicationId)) {
+            throw new BusinessException(
+                    HttpStatus.FORBIDDEN,
+                    "SELLER_PROFESSIONAL_PROFILE_NOT_FOUND",
+                    "Seller professional profile mismatched found for this application."
+            );
+        }
+    }
 }
