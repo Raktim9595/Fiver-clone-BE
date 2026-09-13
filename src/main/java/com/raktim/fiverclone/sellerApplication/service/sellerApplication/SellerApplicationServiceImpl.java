@@ -2,6 +2,7 @@ package com.raktim.fiverclone.sellerApplication.service.sellerApplication;
 
 import com.raktim.fiverclone.common.exceptions.BusinessException;
 import com.raktim.fiverclone.sellerApplication.dto.StartSellerApplicationRequestDto;
+import com.raktim.fiverclone.sellerApplication.enums.SellerApplicationStatus;
 import com.raktim.fiverclone.sellerApplication.model.SellerApplicationEntity;
 import com.raktim.fiverclone.sellerApplication.repo.SellerApplicationRepo;
 import com.raktim.fiverclone.user.model.UserEntity;
@@ -13,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Instant;
 import java.util.UUID;
 
 @Service
@@ -49,5 +51,21 @@ public class SellerApplicationServiceImpl implements SellerApplicationService {
                                 "Application with id " + id + " was not found."
                         )
                 );
+    }
+
+    @Override
+    public SellerApplicationEntity completeSellerApplication(UUID id, UUID userId) {
+        log.info("Complete the seller application with id {}", id);
+        SellerApplicationEntity sellerApplication = findByIdOrThrow(id);
+
+        //validations
+        sellerApplication.ensureEditable();
+        sellerApplication.validateUser(userId);
+
+        sellerApplication.setStatus(SellerApplicationStatus.SUBMITTED);
+        sellerApplication.setSubmittedAt(Instant.now());
+        log.info("Successfully completed the seller application with id {}", id);
+
+        return sellerApplication;
     }
 }

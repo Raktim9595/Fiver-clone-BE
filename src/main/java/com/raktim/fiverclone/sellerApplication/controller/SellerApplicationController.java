@@ -6,6 +6,7 @@ import com.raktim.fiverclone.sellerApplication.service.SellerCertificationServic
 import com.raktim.fiverclone.sellerApplication.service.SellerEducationService;
 import com.raktim.fiverclone.sellerApplication.service.SellerPortfolioService;
 import com.raktim.fiverclone.sellerApplication.service.sellerApplication.SellerApplicationService;
+import com.raktim.fiverclone.user.model.UserPrincipal;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -13,6 +14,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
@@ -150,5 +152,17 @@ public class SellerApplicationController {
             @PathVariable UUID portfolioId
     ) {
         return ResponseEntity.ok(sellerPortfolioService.delete(portfolioId, id));
+    }
+
+    @PatchMapping("/{id}/submit")
+    @Operation(
+            summary = "Submit the current seller application"
+    )
+    public ResponseEntity<SellerApplicationEntity> submitApplication(
+            @PathVariable UUID id,
+            @AuthenticationPrincipal UserPrincipal user
+            ) {
+        SellerApplicationEntity result = sellerApplicationService.completeSellerApplication(id, user.getId());
+        return ResponseEntity.ok(result);
     }
 }

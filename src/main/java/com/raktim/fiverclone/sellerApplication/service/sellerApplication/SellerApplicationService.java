@@ -9,4 +9,5 @@ public interface SellerApplicationService {
     SellerApplicationEntity startSellerApplication
             (StartSellerApplicationRequestDto startSellerApplicationRequestDto);
     SellerApplicationEntity findByIdOrThrow(UUID id);
+    SellerApplicationEntity completeSellerApplication(UUID id, UUID userId);
 }

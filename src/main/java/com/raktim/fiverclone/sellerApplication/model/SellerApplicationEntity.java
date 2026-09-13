@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import java.time.Instant;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 
 @Entity
 @Builder(toBuilder = true)
@@ -98,11 +99,22 @@ public class SellerApplicationEntity extends BaseEntity {
     }
 
     public void ensureEditableDuringReview() {
+        ensureEditable();
         if (currentStep != SellerOnboardingSteps.REVIEW) {
             throw new BusinessException(
                     HttpStatus.FORBIDDEN,
                     "INVALID_STEP_FOR_EDIT",
                     "This action can be performed only when the application current step is in REVIEW."
+            );
+        }
+    }
+
+    public void validateUser(UUID userId) {
+        if (!userId.equals(user.getId())) {
+            throw new BusinessException(
+                    HttpStatus.UNAUTHORIZED,
+                    "INVALID_USER_ID",
+                    "The provided application belongs to different user so can't make any changes."
             );
         }
     }
