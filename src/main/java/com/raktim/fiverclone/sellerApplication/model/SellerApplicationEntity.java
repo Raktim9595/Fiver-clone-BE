@@ -66,7 +66,7 @@ public class SellerApplicationEntity extends BaseEntity {
             cascade = CascadeType.ALL,
             orphanRemoval = true
     )
-    private SellerPersonalProfileEntity professionalProfile;
+    private SellerProfessionalProfileEntity professionalProfile;
 
     @Builder.Default
     @ManyToMany(fetch = FetchType.LAZY)
