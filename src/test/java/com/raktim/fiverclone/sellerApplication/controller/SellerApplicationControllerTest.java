@@ -239,4 +239,17 @@ public class SellerApplicationControllerTest {
 
         verify(sellerPortfolioService, times(1)).delete(portfolioId, applicationId);
     }
+
+    @Test
+    @DisplayName("""
+            When called GET on /api/seller-application/{id},
+            And there is no error,
+            Then it should invoke proper method in the service and return proper entity
+            """)
+    public void shouldExecuteGetSellerApplication() throws Exception  {
+        UUID id = UUID.randomUUID();
+        mockMvc.perform(get("/api/seller-application/{id}", id)).andExpect(status().isOk());
+
+        verify(sellerApplicationService, times(1)).findByIdOrThrow(id);
+    }
 }

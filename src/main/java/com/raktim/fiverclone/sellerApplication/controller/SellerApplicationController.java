@@ -40,6 +40,17 @@ public class SellerApplicationController {
         return ResponseEntity.status(HttpStatus.CREATED).body(result);
     }
 
+    @GetMapping("/{id}")
+    @Operation(
+            summary = "Fetch the required seller application for the passed id"
+    )
+    public ResponseEntity<SellerApplicationEntity> getSeller(
+            @PathVariable UUID id
+    ) {
+        SellerApplicationEntity result = sellerApplicationService.findByIdOrThrow(id);
+        return ResponseEntity.ok(result);
+    }
+
     @PostMapping("/{id}/seller-education")
     @Operation(
             summary = "Add a seller education details"
