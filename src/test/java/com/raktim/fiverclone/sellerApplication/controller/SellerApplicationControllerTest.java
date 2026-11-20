@@ -5,12 +5,21 @@ import com.raktim.fiverclone.mocks.SellerApplicationTestData;
 import com.raktim.fiverclone.sellerApplication.dto.SellerCertificationRequestDto;
 import com.raktim.fiverclone.sellerApplication.dto.SellerEducationRequestDto;
 import com.raktim.fiverclone.sellerApplication.dto.SellerPortfolioRequestDto;
-import com.raktim.fiverclone.sellerApplication.dto.StartSellerApplicationRequestDto;
 import com.raktim.fiverclone.sellerApplication.service.SellerCertificationService;
 import com.raktim.fiverclone.sellerApplication.service.SellerEducationService;
 import com.raktim.fiverclone.sellerApplication.service.SellerPortfolioService;
 import com.raktim.fiverclone.sellerApplication.service.sellerApplication.SellerApplicationService;
+import com.raktim.fiverclone.user.model.UserEntity;
+import com.raktim.fiverclone.user.model.UserPrincipal;
 import com.raktim.fiverclone.user.service.CustomUserDetailService;
+import com.raktim.fiverclone.mocks.UserTestDataFactory;
+import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.context.annotation.Bean;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.web.SecurityFilterChain;
 import com.raktim.fiverclone.user.service.UserService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -24,6 +33,7 @@ import tools.jackson.databind.ObjectMapper;
 import java.util.UUID;
 
 import static org.mockito.Mockito.*;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.authentication;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -56,19 +66,38 @@ public class SellerApplicationControllerTest {
     @MockitoBean
     private SellerCertificationService sellerCertificationService;
 
+    // A plain @WebMvcTest does not register Spring Security's @AuthenticationPrincipal support,
+    // so without this Spring would build an EMPTY UserPrincipal instead of using the logged-in one.
+    // @EnableWebSecurity registers that support; the chain below keeps every request open so the
+    // other tests in this class (which send no token) are unaffected.
+    @TestConfiguration
+    @EnableWebSecurity
+    static class TestSecurityConfig {
+        @Bean
+        SecurityFilterChain testFilterChain(HttpSecurity http) {
+            return http.csrf(AbstractHttpConfigurer::disable)
+                    .authorizeHttpRequests(a -> a.anyRequest().permitAll())
+                    .build();
+        }
+    }
+
     @Test
-    @DisplayName("When called POST on /api/seller-application, And no issues Then it should call proper method")
+    @DisplayName("""
+            When called POST on /api/seller-application, And no issues
+            Then it should start the application for the LOGGED IN user (taken from the token, not the body)
+            """)
     public void testAddSeller() throws Exception  {
         UUID userId = UUID.randomUUID();
-        StartSellerApplicationRequestDto requestDto =
-                new StartSellerApplicationRequestDto(userId);
+        UserEntity entity = UserTestDataFactory.validUserEntity().build();
+        entity.setId(userId);
+        UserPrincipal principal = new UserPrincipal(entity);
 
         mockMvc.perform(post("/api/seller-application")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(requestDto)))
+                .with(authentication(new UsernamePasswordAuthenticationToken(
+                        principal, null, principal.getAuthorities()))))
                 .andExpect(status().isCreated());
 
-        verify(sellerApplicationService).startSellerApplication(requestDto);
+        verify(sellerApplicationService).startSellerApplication(userId);
     }
 
     @Test

@@ -1,7 +1,6 @@
 package com.raktim.fiverclone.sellerApplication.service.sellerApplication;
 
 import com.raktim.fiverclone.common.exceptions.BusinessException;
-import com.raktim.fiverclone.sellerApplication.dto.StartSellerApplicationRequestDto;
 import com.raktim.fiverclone.sellerApplication.enums.SellerApplicationStatus;
 import com.raktim.fiverclone.sellerApplication.model.SellerApplicationEntity;
 import com.raktim.fiverclone.sellerApplication.repo.SellerApplicationRepo;
@@ -28,20 +27,19 @@ public class SellerApplicationServiceImpl implements SellerApplicationService {
 
     @Override
     @Transactional
-    public SellerApplicationEntity startSellerApplication
-            (StartSellerApplicationRequestDto startSellerApplicationRequestDto) {
-        log.info("User {} has submitted the request to become the seller", startSellerApplicationRequestDto);
+    public SellerApplicationEntity startSellerApplication(UUID userId) {
+        log.info("User {} has submitted the request to become the seller", userId);
 
         // validate weather the user already has active become a seller application or not
-        this.validateStartSellerApplication(startSellerApplicationRequestDto.userId());
+        this.validateStartSellerApplication(userId);
 
-        UserEntity user = userService.findUserByIdOrThrow(startSellerApplicationRequestDto.userId());
+        UserEntity user = userService.findUserByIdOrThrow(userId);
         SellerApplicationEntity newEntity = SellerApplicationEntity.builder()
                 .user(user)
                 .build();
         repo.save(newEntity);
 
-        log.info("Successfully saved the request of user {} to become the seller", startSellerApplicationRequestDto);
+        log.info("Successfully saved the request of user {} to become the seller", userId);
 
         return newEntity;
     }

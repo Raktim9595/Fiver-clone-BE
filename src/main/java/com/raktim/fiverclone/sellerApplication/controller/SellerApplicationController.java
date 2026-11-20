@@ -1,5 +1,7 @@
 package com.raktim.fiverclone.sellerApplication.controller;
 
+import com.raktim.fiverclone.sellerApplication.security.ApplicationOwnerOrAdmin;
+import com.raktim.fiverclone.sellerApplication.security.ApplicationOwnerOnly;
 import com.raktim.fiverclone.sellerApplication.dto.*;
 import com.raktim.fiverclone.sellerApplication.model.SellerApplicationEntity;
 import com.raktim.fiverclone.sellerApplication.service.SellerCertificationService;
@@ -33,14 +35,16 @@ public class SellerApplicationController {
     @PostMapping
     @Operation(summary = "Create a new seller", description = "Endpoint to add a new seller in the DRAFT state")
     public ResponseEntity<SellerApplicationEntity> addSeller(
-            @Valid @RequestBody StartSellerApplicationRequestDto startSellerApplicationRequestDto
+            @AuthenticationPrincipal UserPrincipal user
             ) {
+        // the user id comes from the verified login token, never from the request body
         SellerApplicationEntity result = sellerApplicationService
-                .startSellerApplication(startSellerApplicationRequestDto);
+                .startSellerApplication(user.getId());
         return ResponseEntity.status(HttpStatus.CREATED).body(result);
     }
 
     @GetMapping("/{id}")
+    @ApplicationOwnerOrAdmin
     @Operation(
             summary = "Fetch the required seller application for the passed id"
     )
@@ -52,6 +56,7 @@ public class SellerApplicationController {
     }
 
     @PostMapping("/{id}/seller-education")
+    @ApplicationOwnerOnly
     @Operation(
             summary = "Add a seller education details"
     )
@@ -64,6 +69,7 @@ public class SellerApplicationController {
     }
 
     @PutMapping("/{id}/seller-education/{sellerEducationId}")
+    @ApplicationOwnerOnly
     @Operation(
             summary = "Update the education details of the seller application"
     )
@@ -79,6 +85,7 @@ public class SellerApplicationController {
     }
 
     @PostMapping("/{id}/seller-portfolio")
+    @ApplicationOwnerOnly
     @Operation(
             summary = "Add seller portfolio details in the application"
     )
@@ -91,6 +98,7 @@ public class SellerApplicationController {
     }
 
     @PutMapping("/{id}/seller-portfolio/{portfolioId}")
+    @ApplicationOwnerOnly
     @Operation(
             summary = "Update the portfolio details of the seller application"
     )
@@ -106,6 +114,7 @@ public class SellerApplicationController {
     }
 
     @PostMapping("/{id}/seller-certification")
+    @ApplicationOwnerOnly
     @Operation(
             summary = "Add seller certification in the seller application"
     )
@@ -120,6 +129,7 @@ public class SellerApplicationController {
     }
 
     @PutMapping("/{id}/seller-certification/{certificationId}")
+    @ApplicationOwnerOnly
     @Operation(
             summary = "Update seller certification for the seller application"
     )
@@ -133,6 +143,7 @@ public class SellerApplicationController {
     }
 
     @DeleteMapping("/{id}/seller-certification/{certificationId}")
+    @ApplicationOwnerOnly
     @Operation(
             summary = "Delete seller certification for the seller application"
     )
@@ -144,6 +155,7 @@ public class SellerApplicationController {
     }
 
     @DeleteMapping("/{id}/seller-education/{educationId}")
+    @ApplicationOwnerOnly
     @Operation(
             summary = "Delete seller education details for the given application"
     )
@@ -155,6 +167,7 @@ public class SellerApplicationController {
     }
 
     @DeleteMapping("/{id}/seller-portfolio/{portfolioId}")
+    @ApplicationOwnerOnly
     @Operation(
             summary = "Delete seller portfolio details for the given application"
     )
@@ -166,6 +179,7 @@ public class SellerApplicationController {
     }
 
     @PatchMapping("/{id}/submit")
+    @ApplicationOwnerOnly
     @Operation(
             summary = "Submit the current seller application"
     )

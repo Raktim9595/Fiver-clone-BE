@@ -1,5 +1,6 @@
 package com.raktim.fiverclone.sellerApplication.controller;
 
+import com.raktim.fiverclone.sellerApplication.security.ApplicationOwnerOnly;
 import com.raktim.fiverclone.sellerApplication.dto.SellerPersonalProfileRequestDto;
 import com.raktim.fiverclone.sellerApplication.dto.SellerPersonalProfileResponseDto;
 import com.raktim.fiverclone.sellerApplication.service.sellerPersonalProfile.SellerPersonalProfileService;
@@ -23,6 +24,7 @@ public class SellerPersonalProfileController {
     private final SellerPersonalProfileService service;
 
     @PostMapping("/{id}/personal-profile")
+    @ApplicationOwnerOnly
     @Operation(
             summary = "End point to create the personal profile of the respective seller application"
     )
@@ -35,6 +37,7 @@ public class SellerPersonalProfileController {
     }
 
     @PutMapping("/{id}/personal-profile/{personalProfileId}")
+    @ApplicationOwnerOnly
     @Operation(
             summary = "End point to update the personal profile of the application"
     )

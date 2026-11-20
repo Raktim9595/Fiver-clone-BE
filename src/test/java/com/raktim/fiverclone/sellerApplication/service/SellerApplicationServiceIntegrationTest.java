@@ -4,7 +4,6 @@ import com.raktim.fiverclone.common.IntegrationTestConfig;
 import com.raktim.fiverclone.mocks.UserTestDataFactory;
 import com.raktim.fiverclone.seeder.SellerApplicationTestDataSeeder;
 import com.raktim.fiverclone.seeder.UserTestDataSeeder;
-import com.raktim.fiverclone.sellerApplication.dto.StartSellerApplicationRequestDto;
 import com.raktim.fiverclone.sellerApplication.enums.SellerApplicationStatus;
 import com.raktim.fiverclone.sellerApplication.model.SellerApplicationEntity;
 import com.raktim.fiverclone.sellerApplication.repo.SellerApplicationRepo;
@@ -69,12 +68,9 @@ public class SellerApplicationServiceIntegrationTest {
                         .username("AlanWalker")
                         .email("alan@gmail.com")
         );
-        StartSellerApplicationRequestDto request =
-                new StartSellerApplicationRequestDto(newUser.getId());
-
         // Act
         SellerApplicationEntity result =
-                sellerApplicationService.startSellerApplication(request);
+                sellerApplicationService.startSellerApplication(newUser.getId());
 
         // Assert
         assertNotNull(result);
@@ -91,14 +87,11 @@ public class SellerApplicationServiceIntegrationTest {
             """)
     public void startSellerApplication_error_of_application_already_exists() {
 
-        StartSellerApplicationRequestDto request =
-                new StartSellerApplicationRequestDto(user.getId());
-
         ExceptionTestUtil.assertBusinessException(
                 HttpStatus.FORBIDDEN,
                 "APPLICATION_ALREADY_ACTIVE",
                 "There already exists the active application for the user to become the seller",
-                () -> sellerApplicationService.startSellerApplication(request)
+                () -> sellerApplicationService.startSellerApplication(user.getId())
         );
     }
 
@@ -112,12 +105,9 @@ public class SellerApplicationServiceIntegrationTest {
     public void startSellerApplication_startSellerApplication_no_error_on_withdrawn_application_found() {
         sellerApplicationService.completeSellerApplication(application.getId(), user.getId());
 
-        StartSellerApplicationRequestDto request =
-                new StartSellerApplicationRequestDto(user.getId());
-
         // Act
         SellerApplicationEntity result =
-                sellerApplicationService.startSellerApplication(request);
+                sellerApplicationService.startSellerApplication(user.getId());
 
         // Assert
         assertNotNull(result);

@@ -1,5 +1,6 @@
 package com.raktim.fiverclone.sellerApplication.controller;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import com.raktim.fiverclone.sellerApplication.dto.SellerApplicationHistoryRequestDto;
 import com.raktim.fiverclone.sellerApplication.dto.SellerApplicationHistoryResponseDto;
 import com.raktim.fiverclone.sellerApplication.service.sellerApplicationStatusHistory.SellerApplicationStatusHistoryService;
@@ -22,6 +23,7 @@ import java.util.UUID;
 public class SellerApplicationHistoryController {
     private final SellerApplicationStatusHistoryService service;
     @PostMapping("/{id}/status-history")
+    @PreAuthorize("hasRole('ADMIN')") // only the review team records status changes
     @Operation(
            summary = "Create a new row for to record status change of the Seller Application"
     )

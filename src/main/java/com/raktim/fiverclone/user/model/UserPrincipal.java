@@ -18,7 +18,8 @@ public class UserPrincipal implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Collections.singleton(new SimpleGrantedAuthority("USER"));
+        // "ROLE_" prefix is what hasRole('ADMIN') looks for, e.g. ROLE_ADMIN, ROLE_SELLER.
+        return Collections.singleton(new SimpleGrantedAuthority("ROLE_" + user.getRole().getName().name()));
     }
 
     @Override
