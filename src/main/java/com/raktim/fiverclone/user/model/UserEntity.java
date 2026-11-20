@@ -2,6 +2,7 @@ package com.raktim.fiverclone.user.model;
 
 import com.raktim.fiverclone.common.entities.BaseEntity;
 import com.raktim.fiverclone.fileUpload.model.UserFileEntity;
+import com.raktim.fiverclone.role.model.RoleEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import lombok.*;
@@ -45,15 +46,7 @@ public class UserEntity extends BaseEntity {
     )
     private UserStatus status =  UserStatus.ACTIVE;
 
-    @Builder.Default
-    @Enumerated(EnumType.STRING)
-    @Column(
-            nullable = false,
-            columnDefinition = "varchar(20) check (role in ('BUYER','ADMIN', 'SELLER'))"
-    )
-    private UserRole role = UserRole.BUYER;
-
-    @Builder.Default
-    @OneToMany(mappedBy = "user")
-    private List<UserFileEntity> files = new ArrayList<>();
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "role_id", nullable = false)
+    private RoleEntity role;
 }

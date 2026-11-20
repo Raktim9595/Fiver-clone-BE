@@ -9,6 +9,7 @@ import jakarta.validation.constraints.*;
 import lombok.Builder;
 
 import java.time.LocalDate;
+import java.util.UUID;
 
 @Builder(toBuilder = true)
 public record UserDTO(
@@ -35,8 +36,8 @@ public record UserDTO(
         @Pattern(regexp = "^0[0-9]{9}$", message = "Invalid Australian phone number")
         String phoneNumber,
 
-        @NotNull(message = "Role is required")
-        UserRole role,
+        @NotNull(message = "roleId is required")
+        UUID roleId,
 
         String bio,
         String timeZone,

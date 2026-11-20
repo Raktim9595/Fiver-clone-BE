@@ -66,7 +66,8 @@ public class WebSecurityConfig {
                                         "/v3/api-docs/**",
                                         "/v3/api-docs",
                                         "/v3/api-docs.yaml",
-                                        "/api/info/**"
+                                        "/api/info/**",
+                                        "/api/roles/**"
                                 ).permitAll()
                                 .anyRequest().authenticated()
                 );

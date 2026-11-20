@@ -56,7 +56,7 @@ public class UserPrincipal implements UserDetails {
     }
 
     public UserRole getUserRole() {
-        return user.getRole();
+        return user.getRole().getName();
     }
 
     public @NullMarked UUID getId() {

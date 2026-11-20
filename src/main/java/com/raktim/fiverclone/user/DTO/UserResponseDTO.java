@@ -1,5 +1,6 @@
 package com.raktim.fiverclone.user.DTO;
 
+import com.raktim.fiverclone.role.model.RoleEntity;
 import com.raktim.fiverclone.user.model.UserRole;
 import com.raktim.fiverclone.user.model.UserStatus;
 import jakarta.validation.constraints.NotNull;
@@ -20,7 +21,7 @@ public record UserResponseDTO(
         String phoneNumber,
         String firstName,
         String lastName,
-        UserRole role,
+        RoleEntity role,
         String bio,
         String timeZone,
         String country,

@@ -1,5 +1,6 @@
 package com.raktim.fiverclone.user.utils;
 
+import com.raktim.fiverclone.role.model.RoleEntity;
 import com.raktim.fiverclone.user.DTO.UpdateUserDto;
 import com.raktim.fiverclone.user.DTO.UserDTO;
 import com.raktim.fiverclone.user.DTO.UserListResponseDto;
@@ -10,8 +11,9 @@ import org.mapstruct.*;
 @Mapper(componentModel = "spring")
 public interface UserMapper {
     @Mapping(target = "password", ignore = true)
-    @Mapping(target = "files", ignore = true)
-    UserEntity toEntity(UserDTO dto);
+    @Mapping(target = "role", source = "role")
+    UserEntity toEntity(UserDTO dto, RoleEntity role);
+
     UserResponseDTO toDetailResponseDTO(UserEntity user);
     UserListResponseDto toListResponseDTO(UserEntity user);
 
@@ -19,7 +21,6 @@ public interface UserMapper {
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
     @Mapping(target = "password", ignore = true)
-    @Mapping(target = "files", ignore = true)
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     void updateUserFromDto(
             UpdateUserDto updateUserDto,

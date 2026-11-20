@@ -1,5 +1,6 @@
 package com.raktim.fiverclone.mocks;
 
+import com.raktim.fiverclone.role.model.RoleEntity;
 import com.raktim.fiverclone.user.DTO.UpdateUserDto;
 import com.raktim.fiverclone.user.DTO.UserDTO;
 import com.raktim.fiverclone.user.DTO.UserResponseDTO;
@@ -12,13 +13,17 @@ import java.time.LocalDate;
 import java.util.UUID;
 
 public class UserTestDataFactory {
+    private static RoleEntity role =           new RoleEntity(
+            UUID.fromString("01a09a99-e098-7d11-ac54-f8c1944fff66"),
+            UserRole.SELLER);
+
     public static UserDTO.UserDTOBuilder validUserDto() {
         return UserDTO.builder()
                 .username("Raktim")
                 .password("123456")
                 .email("raktim@gmail.com")
                 .address("Australia")
-                .role(UserRole.BUYER)
+                .roleId(UUID.fromString("01a09a99-e098-7a8a-83a1-6e56f9204c32"))
                 .firstName("Raktim")
                 .lastName("Thapa")
                 .phoneNumber("0406055500")
@@ -36,7 +41,7 @@ public class UserTestDataFactory {
                 .password("123456")
                 .firstName("Raktim")
                 .lastName("Thapa")
-                .role(UserRole.SELLER)
+                .role(role)
                 .email("raktim@gmail.com")
                 .address("Australia")
                 .phoneNumber("0406055500")
@@ -55,7 +60,7 @@ public class UserTestDataFactory {
                 .id(id)
                 .email("raktim@gmail.com")
                 .address("Australia")
-                .role(UserRole.SELLER)
+                .role(role)
                 .phoneNumber("0406055500");
 
     }
@@ -69,7 +74,6 @@ public class UserTestDataFactory {
                 .country("Nepal")
                 .phoneNumber("0406055500")
                 .username("RaktimThapa")
-                .role(UserRole.SELLER)
                 .address("Australia")
                 .dateOfBirth(LocalDate.of(2004, 10, 22));
     }

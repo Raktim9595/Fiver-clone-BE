@@ -2,6 +2,7 @@ package com.raktim.fiverclone.user.service;
 
 import com.raktim.fiverclone.common.DTO.PaginatedResponseDto;
 import com.raktim.fiverclone.common.exceptions.BusinessException;
+import com.raktim.fiverclone.common.utils.EntityReferenceResolver;
 import com.raktim.fiverclone.mocks.UserTestDataFactory;
 import com.raktim.fiverclone.user.DTO.UpdateUserDto;
 import com.raktim.fiverclone.user.DTO.UserDTO;
@@ -43,10 +44,13 @@ public class UserServiceImplTest {
 
     private UserServiceImpl userService;
 
+    @Mock
+    EntityReferenceResolver referenceResolver;
+
     @BeforeEach
     void setUp() {
         UserMapper userMapper = Mappers.getMapper(UserMapper.class);
-        userService = new UserServiceImpl(userRepo, userMapper, passwordEncoder);
+        userService = new UserServiceImpl(userRepo, userMapper, passwordEncoder, referenceResolver);
     }
 
     @Test
