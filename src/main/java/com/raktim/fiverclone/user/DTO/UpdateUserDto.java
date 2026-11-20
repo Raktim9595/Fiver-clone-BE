@@ -1,6 +1,5 @@
 package com.raktim.fiverclone.user.DTO;
 
-import com.raktim.fiverclone.user.model.UserRole;
 import com.raktim.fiverclone.user.model.UserStatus;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -31,9 +30,6 @@ public record UpdateUserDto(
         @NotBlank(message = "Phone number is required")
         @Pattern(regexp = "^0[0-9]{9}$", message = "Invalid Australian phone number")
         String phoneNumber,
-
-        @NotNull(message = "Role is required")
-        UserRole role,
 
         String bio,
         String timeZone,

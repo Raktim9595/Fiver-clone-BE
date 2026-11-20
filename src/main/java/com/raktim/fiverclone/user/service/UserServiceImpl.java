@@ -2,7 +2,9 @@ package com.raktim.fiverclone.user.service;
 
 import com.raktim.fiverclone.common.DTO.PaginatedResponseDto;
 import com.raktim.fiverclone.common.exceptions.BusinessException;
+import com.raktim.fiverclone.common.utils.EntityReferenceResolver;
 import com.raktim.fiverclone.common.utils.PaginationUtil;
+import com.raktim.fiverclone.role.model.RoleEntity;
 import com.raktim.fiverclone.user.DTO.UpdateUserDto;
 import com.raktim.fiverclone.user.DTO.UserDTO;
 import com.raktim.fiverclone.user.DTO.UserListResponseDto;
@@ -29,16 +31,20 @@ public class UserServiceImpl implements UserService {
     private final UserRepo userRepo;
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
+    private final EntityReferenceResolver entityReferenceResolver;
 
     private static final Logger log = LoggerFactory.getLogger(UserServiceImpl.class);
 
     @Override
     public UserResponseDTO createUser(UserDTO userDTO) {
         log.info("Creating user {}", userDTO);
+
+        RoleEntity role = entityReferenceResolver.getRequired(RoleEntity.class, userDTO.roleId());
+
         UserEntity foundUser = userRepo.findByEmail(userDTO.email());
         validateUserForCreation(foundUser);
 
-        UserEntity userEntity = userMapper.toEntity(userDTO);
+        UserEntity userEntity = userMapper.toEntity(userDTO, role);
         userEntity.setPassword(passwordEncoder.encode(userDTO.password())); // encode the password
 
         UserEntity newUser =  userRepo.save(userEntity);

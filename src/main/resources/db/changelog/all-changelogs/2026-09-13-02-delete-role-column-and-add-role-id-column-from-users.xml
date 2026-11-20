@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="
+            http://www.liquibase.org/xml/ns/dbchangelog
+            https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="users-replace-role-with-role-id" author="Raktim">
+        <addColumn tableName="users">
+            <column name="role_id" type="UUID"/>
+        </addColumn>
+
+        <addForeignKeyConstraint
+                constraintName="fk_users_role"
+                baseTableName="users"
+                baseColumnNames="role_id"
+                referencedTableName="roles"
+                referencedColumnNames="id"
+                onDelete="RESTRICT"/>
+
+        <addNotNullConstraint
+                tableName="users"
+                columnName="role_id"
+                columnDataType="UUID"/>
+
+
+        <createIndex
+                indexName="idx_users_role_id"
+                tableName="users">
+            <column name="role_id"/>
+        </createIndex>
+
+        <dropColumn
+                tableName="users"
+                columnName="role"/>
+
+    </changeSet>
+
+</databaseChangeLog>

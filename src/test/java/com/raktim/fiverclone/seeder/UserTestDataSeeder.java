@@ -21,6 +21,11 @@ public class UserTestDataSeeder {
         return userRepo.save(user);
     }
 
+    public UserEntity addUser(UserEntity.UserEntityBuilder entityBuilder) {
+        UserEntity user = entityBuilder.build();
+        return userRepo.save(user);
+    }
+
     public List<LanguageEntity> findAllLanguages() {
         return languageRepo.findAll();
     }

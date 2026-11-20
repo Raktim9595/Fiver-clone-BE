@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -30,6 +31,10 @@ public class SellerApplicationServiceImpl implements SellerApplicationService {
     public SellerApplicationEntity startSellerApplication
             (StartSellerApplicationRequestDto startSellerApplicationRequestDto) {
         log.info("User {} has submitted the request to become the seller", startSellerApplicationRequestDto);
+
+        // validate weather the user already has active become a seller application or not
+        this.validateStartSellerApplication(startSellerApplicationRequestDto.userId());
+
         UserEntity user = userService.findUserByIdOrThrow(startSellerApplicationRequestDto.userId());
         SellerApplicationEntity newEntity = SellerApplicationEntity.builder()
                 .user(user)
@@ -67,5 +72,18 @@ public class SellerApplicationServiceImpl implements SellerApplicationService {
         log.info("Successfully completed the seller application with id {}", id);
 
         return sellerApplication;
+    }
+
+    private void validateStartSellerApplication(UUID userId) {
+        List<SellerApplicationEntity> sellerApplicationEntities =
+                repo.findByUserIdAndStatus(userId,  SellerApplicationStatus.DRAFT);
+
+        if  (!sellerApplicationEntities.isEmpty()) {
+            throw new BusinessException(
+                    HttpStatus.FORBIDDEN,
+                    "APPLICATION_ALREADY_ACTIVE",
+                    "There already exists the active application for the user to become the seller"
+            );
+        }
     }
 }

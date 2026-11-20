@@ -1,6 +1,7 @@
 package com.raktim.fiverclone.sellerApplication.service;
 
 import com.raktim.fiverclone.common.IntegrationTestConfig;
+import com.raktim.fiverclone.mocks.UserTestDataFactory;
 import com.raktim.fiverclone.seeder.SellerApplicationTestDataSeeder;
 import com.raktim.fiverclone.seeder.UserTestDataSeeder;
 import com.raktim.fiverclone.sellerApplication.dto.StartSellerApplicationRequestDto;
@@ -63,6 +64,54 @@ public class SellerApplicationServiceIntegrationTest {
             Then it should create the seller and return the respective entity
             """)
     public void startSellerApplication_startSellerApplication_no_error() {
+        UserEntity newUser = userTestDataSeeder.addUser(
+                UserTestDataFactory.validUserEntity()
+                        .username("AlanWalker")
+                        .email("alan@gmail.com")
+        );
+        StartSellerApplicationRequestDto request =
+                new StartSellerApplicationRequestDto(newUser.getId());
+
+        // Act
+        SellerApplicationEntity result =
+                sellerApplicationService.startSellerApplication(request);
+
+        // Assert
+        assertNotNull(result);
+        assertNotEquals(result.getId(), application.getId());
+        assertEquals(newUser, result.getUser());
+    }
+
+    @Test
+    @DisplayName("""
+            SellerApplicationService Integration Test,
+            When a valid dto is passed,
+            And DRAFT application already exists for the passed user,
+            Then it should throw error with proper error message
+            """)
+    public void startSellerApplication_error_of_application_already_exists() {
+
+        StartSellerApplicationRequestDto request =
+                new StartSellerApplicationRequestDto(user.getId());
+
+        ExceptionTestUtil.assertBusinessException(
+                HttpStatus.FORBIDDEN,
+                "APPLICATION_ALREADY_ACTIVE",
+                "There already exists the active application for the user to become the seller",
+                () -> sellerApplicationService.startSellerApplication(request)
+        );
+    }
+
+    @Test
+    @DisplayName("""
+            SellerApplicationService Integration Test,
+            When a valid dto is passed,
+            And found application has the status other than DRAFT
+            Then it should create the seller and return the respective entity
+            """)
+    public void startSellerApplication_startSellerApplication_no_error_on_withdrawn_application_found() {
+        sellerApplicationService.completeSellerApplication(application.getId(), user.getId());
+
         StartSellerApplicationRequestDto request =
                 new StartSellerApplicationRequestDto(user.getId());
 

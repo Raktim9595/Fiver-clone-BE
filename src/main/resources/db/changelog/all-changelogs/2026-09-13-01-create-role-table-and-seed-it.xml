@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="create-role-table" author="Raktim">
+        <createTable tableName="roles">
+            <column name="id" type="uuid">
+                <constraints primaryKey="true" />
+            </column>
+            <column name="name" type="varchar(20)">
+                <constraints unique="true" nullable="false" />
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="seed-roles-table" author="Raktim">
+        <loadData
+                tableName="roles"
+                file="db/data/roles.csv"
+                separator=","
+                relativeToChangelogFile="false"
+        >
+            <column name="id" type="uuid" />
+            <column name="name" type="varchar(20)" />
+        </loadData>
+    </changeSet>
+</databaseChangeLog>
