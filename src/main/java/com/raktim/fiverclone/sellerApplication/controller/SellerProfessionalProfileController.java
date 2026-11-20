@@ -1,5 +1,6 @@
 package com.raktim.fiverclone.sellerApplication.controller;
 
+import com.raktim.fiverclone.sellerApplication.security.ApplicationOwnerOnly;
 import com.raktim.fiverclone.sellerApplication.dto.SellerProfessionalProfileRequestDto;
 import com.raktim.fiverclone.sellerApplication.dto.SellerProfessionalProfileResponseDto;
 import com.raktim.fiverclone.sellerApplication.service.SellerProfessionalProfileService;
@@ -23,6 +24,7 @@ public class SellerProfessionalProfileController {
     public final SellerProfessionalProfileService service;
 
     @PostMapping("/{id}/professional-profile")
+    @ApplicationOwnerOnly
     @Operation(
             summary = "End point to create the professional profile of the respective seller application"
     )
@@ -35,18 +37,19 @@ public class SellerProfessionalProfileController {
         return ResponseEntity.status(HttpStatus.CREATED).body(result);
     }
 
-    @PutMapping("/{applicationId}/professional-profile/{professionalProfileId}")
+    @PutMapping("/{id}/professional-profile/{professionalProfileId}")
+    @ApplicationOwnerOnly
     @Operation(
             summary = "Endpoint to update professional profile of the application"
     )
     public ResponseEntity<SellerProfessionalProfileResponseDto>
         updateSellerProfessionalProfile(
-                @PathVariable UUID applicationId,
+                @PathVariable UUID id,
                 @PathVariable UUID professionalProfileId,
                 @Valid @RequestBody SellerProfessionalProfileRequestDto dto
                 ) {
         SellerProfessionalProfileResponseDto result =
-                service.update(professionalProfileId, applicationId, dto);
+                service.update(professionalProfileId, id, dto);
         return ResponseEntity.ok(result);
     }
 }

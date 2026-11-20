@@ -8,9 +8,39 @@
             https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
 
     <changeSet id="users-replace-role-with-role-id" author="Raktim">
+        <!--
+            This changeset was edited after it had already been applied to local databases
+            (the first version had no backfill step). Liquibase stores a checksum of every
+            applied changeset and refuses to start if the file no longer matches it.
+            validCheckSum tells Liquibase that the checksum of that earlier version is also
+            acceptable, so databases that ran the old version keep working. Fresh databases
+            (and databases that already contain users) run this version from the top.
+        -->
+        <validCheckSum>9:69b7b35cbed241adfbd73fe87013618a</validCheckSum>
+
+        <!-- 1. Add the new column as NULLABLE. A NOT NULL column cannot be added to a table
+                that already has rows, because the existing rows would have no value for it. -->
         <addColumn tableName="users">
             <column name="role_id" type="UUID"/>
         </addColumn>
+
+        <!-- 2. Backfill: copy each user's old role (a name such as 'BUYER') into role_id by
+                matching it with the row in the roles table that has the same name. -->
+        <sql>
+            UPDATE users
+            SET role_id = roles.id
+            FROM roles
+            WHERE roles.name = users.role
+        </sql>
+
+        <!-- 3. Every row now has a value, so the NOT NULL constraint is safe. If some user had
+                a role name that does not exist in roles, this step fails and the whole
+                changeset is rolled back (Postgres DDL is transactional), instead of
+                silently losing data. -->
+        <addNotNullConstraint
+                tableName="users"
+                columnName="role_id"
+                columnDataType="UUID"/>
 
         <addForeignKeyConstraint
                 constraintName="fk_users_role"
@@ -20,18 +50,13 @@
                 referencedColumnNames="id"
                 onDelete="RESTRICT"/>
 
-        <addNotNullConstraint
-                tableName="users"
-                columnName="role_id"
-                columnDataType="UUID"/>
-
-
         <createIndex
                 indexName="idx_users_role_id"
                 tableName="users">
             <column name="role_id"/>
         </createIndex>
 
+        <!-- 4. Only now, once the data has been copied, drop the old column. -->
         <dropColumn
                 tableName="users"
                 columnName="role"/>
